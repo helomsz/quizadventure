@@ -1,0 +1,322 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.onboarding-container {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+
+  font-family: 'Fredoka', sans-serif;
+}
+
+/* =========================
+   BACKGROUND
+========================= */
+
+.ob-bg {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  filter: blur(4px);
+  transform: scale(1.04);
+
+  z-index: 1;
+}
+
+.ob-bg-mobile {
+  display: block;
+}
+
+.ob-bg-desktop {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .ob-bg-mobile {
+    display: none;
+  }
+
+  .ob-bg-desktop {
+    display: block;
+  }
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.onboarding-content {
+  position: relative;
+
+  width: 100%;
+  max-width: 430px;
+  height: 100%;
+
+  margin: 0 auto;
+
+  z-index: 5;
+}
+
+/* =========================
+   SKIP
+========================= */
+
+.btn-skip {
+  position: absolute;
+
+  top: 18px;
+  right: 18px;
+
+  z-index: 50;
+
+  border: 2px solid rgba(255, 255, 255, 0.85);
+
+  border-radius: 999px;
+
+  padding: 7px 16px;
+
+  background: linear-gradient(
+    180deg,
+    #9fe83b 0%,
+    #67b412 100%
+  );
+
+  color: white;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  box-shadow:
+    0 4px 10px rgba(0,0,0,0.35),
+    inset 0 2px 2px rgba(255,255,255,0.3);
+
+  cursor: pointer;
+}
+
+/* =========================
+   BALÃO
+========================= */
+
+.speech-bubble-container {
+  position: absolute;
+
+  top: 66px;
+  left: 69%;
+
+  transform: translateX(-50%);
+
+  width: 255px;
+
+  z-index: 20;
+
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,0.28));
+}
+
+.speech-bubble-img {
+  width: 100%;
+  display: block;
+}
+
+.speech-bubble-text {
+  position: absolute;
+
+  top: 40%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  width: 74%;
+
+  text-align: center;
+
+  color: #5a2f0e;
+
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+/* =========================
+   PERSONAGEM
+========================= */
+
+.character-container {
+  position: absolute;
+
+  left: 30%;
+  bottom: 94px;
+  transform: translateX(-50%);
+
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+
+  z-index: 10;
+}
+
+.character-img {
+  height: 570px;
+  width: auto;
+
+  object-fit: contain;
+
+  filter: drop-shadow(0 10px 12px rgba(0,0,0,0.32));
+}
+
+/* =========================
+   DOTS
+========================= */
+
+.dots-container {
+  position: absolute;
+
+  bottom: 38px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  z-index: 40;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 999px;
+
+  background: rgba(255,255,255,0.55);
+
+  transition: all .2s ease;
+}
+
+.dot.active {
+  width: 18px;
+
+  background: white;
+}
+
+/* =========================
+   NEXT BUTTON
+========================= */
+
+.btn-next {
+  position: absolute;
+
+  right: 22px;
+  bottom: 20px;
+
+  width: 50px;
+  height: 50px;
+
+  border-radius: 50%;
+
+  border: 3px solid rgba(255,255,255,0.9);
+
+  background: linear-gradient(
+    180deg,
+    #9df436 0%,
+    #67bb15 100%
+  );
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 50;
+
+  box-shadow:
+    0 5px 10px rgba(0,0,0,0.35),
+    inset 0 2px 2px rgba(255,255,255,0.35);
+
+  cursor: pointer;
+}
+
+.btn-next svg {
+  width: 22px;
+  height: 22px;
+
+  color: white;
+}
+
+/* =========================
+   START BUTTON
+========================= */
+
+.btn-start {
+  position: absolute;
+
+  left: 50%;
+  bottom: 18px;
+
+  transform: translateX(-50%);
+
+  width: 170px;
+  height: 54px;
+
+  border: 3px solid rgba(255,255,255,0.85);
+
+  border-radius: 999px;
+
+  background: linear-gradient(
+    180deg,
+    #f7aa33 0%,
+    #d97706 100%
+  );
+
+  color: white;
+
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: .5px;
+
+  box-shadow:
+    0 6px 10px rgba(0,0,0,0.35),
+    inset 0 2px 2px rgba(255,255,255,0.4);
+
+  z-index: 50;
+
+  cursor: pointer;
+}
+
+/* =========================
+   AJUSTES TELAS PEQUENAS
+========================= */
+
+@media (max-height: 740px) {
+  .character-img {
+    height: 430px;
+  }
+
+  .speech-bubble-container {
+    top: 64px;
+  }
+}
+
+@media (max-height: 680px) {
+  .character-img {
+    height: 390px;
+  }
+
+  .speech-bubble-container {
+    width: 220px;
+  }
+
+  .speech-bubble-text {
+    font-size: 13px;
+  }
+}
