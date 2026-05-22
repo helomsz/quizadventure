@@ -53,25 +53,28 @@ export default function Onboarding() {
 
   return (
     <div className="onboarding-container">
-      {/* Background */}
+      {/* background */}
       <img src={bgMobile} alt="" className="ob-bg ob-bg-mobile" />
       <img src={bgDesktop} alt="" className="ob-bg ob-bg-desktop" />
 
-      {/* Skip */}
-      <button className="btn-skip" onClick={handleSkip}>
+      {/* overlay */}
+      <div className="onboarding-overlay" />
+
+      {/* skip */}
+      <button className="btn-skip" onClick={() => setCurrentStep(steps.length - 1)}>
         Pular
       </button>
 
       <div className="onboarding-content">
-        {/* Balão */}
-        <div className="speech-bubble-container">
+        {/* balão */}
+        <div className={`speech-bubble-container${isLastStep ? ' last-step' : ''}`}>
           <img
             src={balaoFalaImg}
             alt="Balão"
-            className="speech-bubble-img"
+            className={`speech-bubble-img${isLastStep ? ' small' : ''}`}
           />
 
-          <div className="speech-bubble-text">
+          <div className={`speech-bubble-text${isLastStep ? ' small-text' : ''}`}>
             {steps[currentStep].text.split('\n').map((line, index) => (
               <React.Fragment key={index}>
                 {line}
@@ -81,7 +84,7 @@ export default function Onboarding() {
           </div>
         </div>
 
-        {/* Personagem */}
+        {/* personagem */}
         <div className="character-container">
           <img
             src={steps[currentStep].character}
@@ -90,31 +93,25 @@ export default function Onboarding() {
           />
         </div>
 
-        {/* Dots */}
+        {/* dots */}
         {!isLastStep && (
           <div className="dots-container">
             {steps.slice(0, 3).map((_, index) => (
               <div
                 key={index}
                 className={`dot ${currentStep === index ? 'active' : ''}`}
+                onClick={() => setCurrentStep(index)}
+                style={{ cursor: 'pointer' }}
               />
             ))}
           </div>
         )}
 
-
+        {/* botões */}
         {!isLastStep ? (
           <button className="btn-next" onClick={handleNext}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.22l-6.22-6.22a.75.75 0 0 1 0-1.06Z"
-                clipRule="evenodd"
-              />
+            <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M28.4861 12.3108L48.8802 26.9016C49.0619 27.032 49.2101 27.2038 49.3124 27.4027C49.4148 27.6016 49.4683 27.822 49.4688 28.0457V28.0491C49.4683 28.2736 49.4142 28.4948 49.3111 28.6943C49.2079 28.8938 49.0587 29.0658 48.8757 29.1959L28.4816 43.6927C28.2709 43.8427 28.0228 43.9317 27.7647 43.9498C27.5066 43.9678 27.2485 43.9143 27.0189 43.7951C26.789 43.6768 26.5961 43.4972 26.4617 43.2763C26.3272 43.0554 26.2563 42.8016 26.2568 42.543V35.7205L7.93971 35.7211C7.75469 35.7211 7.57147 35.6847 7.40052 35.614C7.22958 35.5432 7.07426 35.4394 6.94346 35.3085C6.81266 35.1777 6.70893 35.0223 6.63821 34.8513C6.56749 34.6804 6.53117 34.4971 6.53131 34.3121L6.53187 21.6891C6.5318 21.5041 6.56819 21.3209 6.63897 21.1499C6.70975 20.9789 6.81353 20.8235 6.94438 20.6927C7.07523 20.5618 7.23058 20.4581 7.40156 20.3873C7.57253 20.3165 7.75578 20.2801 7.94083 20.2802H26.2562V13.456C26.2562 12.9296 26.553 12.4463 27.0217 12.2033C27.252 12.0845 27.5106 12.0317 27.7691 12.0506C28.0275 12.0696 28.2756 12.1597 28.4861 12.3108Z" fill="#F6F6F6" fillOpacity="0.9"/>
             </svg>
           </button>
         ) : (
