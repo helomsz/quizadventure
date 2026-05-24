@@ -18,18 +18,15 @@ export default function Onboarding() {
 
   const steps = [
     {
-      text:
-        'Olá, explorador!\nMeu nome é Helo e eu adoro descobrir lugares incríveis!',
+      text: 'Olá, explorador!\nMeu nome é Helo e eu adoro descobrir lugares incríveis!',
       character: HeloAcenando,
     },
     {
-      text:
-        'Só que existem várias regiões misteriosas esperando para serem exploradas...',
+      text: 'Só que existem várias regiões misteriosas esperando para serem exploradas...',
       character: HeloMapa,
     },
     {
-      text:
-        'E somente os melhores aventureiros conseguem completar todos os selos do passaporte!',
+      text: 'E somente os melhores aventureiros conseguem completar todos os selos do passaporte!',
       character: HeloPassaporte,
     },
     {
@@ -44,9 +41,14 @@ export default function Onboarding() {
     }
   };
 
-  const handleSkip = () => {
-    alert('Indo para o jogo!');
-    // navigate('/game');
+  // Pula para o ÚLTIMO passo do onboarding, sem mudar de página
+  const handleSkipToLastStep = () => {
+    setCurrentStep(steps.length - 1);
+  };
+
+  // Navega para a seleção de personagens (Disparado pelo COMEÇAR)
+  const handleStartGame = () => {
+    navigate('/character-selection');
   };
 
   const isLastStep = currentStep === steps.length - 1;
@@ -60,10 +62,12 @@ export default function Onboarding() {
       {/* overlay */}
       <div className="onboarding-overlay" />
 
-      {/* skip */}
-      <button className="btn-skip" onClick={() => setCurrentStep(steps.length - 1)}>
-        Pular
-      </button>
+      {/* skip - some quando já estiver no último passo */}
+      {!isLastStep && (
+        <button className="btn-skip" onClick={handleSkipToLastStep}>
+          Pular
+        </button>
+      )}
 
       <div className="onboarding-content">
         {/* balão */}
@@ -115,7 +119,7 @@ export default function Onboarding() {
             </svg>
           </button>
         ) : (
-          <button className="btn-start" onClick={handleSkip}>
+          <button className="btn-start" onClick={handleStartGame}>
             COMEÇAR
           </button>
         )}
