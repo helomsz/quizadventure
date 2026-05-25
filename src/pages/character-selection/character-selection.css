@@ -1,26 +1,76 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700;800&display=swap');
+
+:root {
+  --cream: #fff3d6;
+
+  --brown-1: #5b2d0c;
+  --brown-2: #8d5222;
+  --brown-3: #b9773b;
+
+  --gold-1: #ffe27a;
+  --gold-2: #ffb800;
+
+  --green-1: #9be000;
+  --green-2: #67b900;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Fredoka', sans-serif;
+}
+
+/* ======================================== */
+/* CONTAINER */
+/* ======================================== */
 
 .selection-container {
   position: fixed;
   inset: 0;
   overflow: hidden;
-  font-family: 'Fredoka', sans-serif;
+  isolation: isolate;
+}
+
+.selection-content {
+  position: relative;
+  z-index: 5;
+
+  width: 100%;
+  height: 100%;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 40px 20px;
+
+  padding:
+    clamp(12px, 2vw, 24px)
+    clamp(16px, 3vw, 40px)
+    clamp(20px, 2vw, 30px);
+
+  gap: clamp(14px, 2vh, 24px);
 }
 
-/* Reaproveitando a lógica de Background do Onboarding */
+/* ======================================== */
+/* BG */
+/* ======================================== */
+
 .sel-bg {
   position: absolute;
   inset: 0;
+
   width: 100%;
   height: 100%;
+
   object-fit: cover;
-  filter: blur(2px);
-  z-index: 1;
 }
 
 .sel-bg-mobile {
@@ -35,193 +85,586 @@
   .sel-bg-mobile {
     display: none;
   }
+
   .sel-bg-desktop {
     display: block;
   }
 }
 
-/* Overlay Escuro Suave */
+/* ======================================== */
+/* OVERLAY */
+/* ======================================== */
+
 .selection-overlay {
-   position: absolute;
+  position: absolute;
   inset: 0;
 
   z-index: 2;
-  pointer-events: none;
 
-  background: linear-gradient(
-    to top,
-    rgba(77, 56, 51, 1) 0%,
-    rgba(77, 56, 51, 0.82) 10%,
-    rgba(77, 56, 51, 0.45) 20%,
-    rgba(77, 56, 51, 0) 50%,
-  )
+  background:
+    linear-gradient(
+      to top,
+      rgba(25, 10, 0, 0.85),
+      rgba(25, 10, 0, 0.2) 45%,
+      rgba(25, 10, 0, 0.1)
+    );
 }
 
-/* Placa do Título: Imagem */
+/* ======================================== */
+/* TÍTULO */
+/* ======================================== */
+
 .sel-title-box {
-  position: relative;
-  z-index: 3;
-  width: 85%;
-  max-width: 340px;
+  width: 100%;
   display: flex;
   justify-content: center;
 }
 
-.sel-title-img {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 6px 4px rgba(0, 0, 0, 0.25));
-}
-
-/* --- ÁREA CENTRAL DO CARROSSEL --- */
-.sel-carousel-wrapper {
+.sel-title-text {
   position: relative;
-  z-index: 3;
-  width: 100%;
-  max-width: 450px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: auto 0;
+
+  padding:
+    clamp(12px, 1.5vw, 18px)
+    clamp(28px, 4vw, 56px);
+
+  border-radius: 28px;
+
+  border: 4px solid #6f3a11;
+
+  background:
+    linear-gradient(
+      180deg,
+      #bb7a3f 0%,
+      #8d5222 48%,
+      #5b2d0c 100%
+    );
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.35),
+    inset 0 3px 4px rgba(255,255,255,0.25),
+    inset 0 -6px 12px rgba(0,0,0,0.25);
+
+  overflow: hidden;
+}
+
+.sel-title-text::before {
+  content: '';
+
+  position: absolute;
+
+  top: 8px;
+  left: 12px;
+  right: 12px;
+
+  height: 35%;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.3),
+      transparent
+    );
+}
+
+.sel-title-text {
+  font-size: clamp(1.5rem, 2vw, 2.8rem);
+
+  font-weight: 800;
+
+  line-height: 0.95;
+
+  color: #fff6d8;
+
+  text-shadow:
+    0 3px 0 rgba(0,0,0,0.25);
+
+  -webkit-text-stroke: 2px #6f3a11;
+}
+
+.sel-title-text span {
+  margin-top: 4px;
+}
+
+/* ======================================== */
+/* CARROSSEL */
+/* ======================================== */
+
+.sel-carousel-wrapper {
+  flex: 1;
+
+  width: 100%;
+  max-width: 1200px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: clamp(16px, 2vh, 24px);
 }
 
 .sel-carousel-row {
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 10px;
-}
 
-/* Setas do Carrossel */
-.sel-arrow-btn {
-  width: 54px;
-  height: 54px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.1s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  gap: clamp(12px, 2vw, 40px);
+}
+
+/* ======================================== */
+/* SETAS */
+/* ======================================== */
+
+
+.sel-arrow-btn {
+  position: relative;
+  width: clamp(58px, 6vw, 85px);
+  height: clamp(58px, 6vw, 85px);
+  border-radius: 50%;
+  border: 6px solid #FEF6E5;
+  background:
+    radial-gradient(
+      circle at top,
+      #A0DF01 0%,
+      #7CCD00 48%,
+      #3BA102 100%
+    );
+  box-shadow:
+    0 10px 18px rgba(0,0,0,0.28),
+    inset 0 4px 6px rgba(255,255,255,0.35),
+    inset 0 -6px 10px rgba(0,0,0,0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    transform 0.08s ease,
+    filter 0.2s ease;
+}
+
+.sel-arrow-btn::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 18px;
+  right: 18px;
+  height: 32%;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.32),
+      rgba(255,255,255,0)
+    );
+  pointer-events: none;
+}
+
+.sel-arrow-btn:hover {
+  filter: brightness(1.05);
+  transform: scale(1.04);
 }
 
 .sel-arrow-btn:active {
-  transform: scale(0.9);
+  transform: scale(0.95);
 }
 
 .sel-arrow-btn img {
-  width: 100%;
-  height: auto;
+  width: 60%;
+  filter: brightness(0) invert(1);
 }
 
-/* Exibição do Personagem */
+.sel-arrow-left {
+  transform: rotate(180deg);
+}
+
+/* ======================================== */
+/* PERSONAGEM */
+/* ======================================== */
+
 .sel-character-display {
-  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 280px;
-  position: relative;
+
+  width: min(42vw, 340px);
+  height: min(52vh, 500px);
 }
 
 .sel-character-img {
+  width: 100%;
   height: 100%;
-  width: auto;
   object-fit: contain;
-  filter: drop-shadow(0 12px 8px rgba(0, 0, 0, 0.3));
+
+  animation: floatCharacter 3s ease-in-out infinite;
+
+  filter:
+    drop-shadow(0 18px 20px rgba(0,0,0,0.35));
 }
 
-/* --- PLAQUINHA GAMIFICADA DO NOME --- */
-.sel-name-plate {
-  margin-top: 20px;
-  background: #ffede1;
-  border: 4px solid #5c3e00;
-  border-bottom-width: 8px; /* Efeito 3D de profundidade */
-  border-radius: 20px;
-  padding: 8px 36px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25), inset 0 -4px 0 rgba(0,0,0,0.1);
+@keyframes floatCharacter {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* ======================================== */
+/* BOTTOM */
+/* ======================================== */
+
+.sel-bottom-row {
   display: flex;
-  justify-content: center;
   align-items: center;
+  gap: 16px;
+}
+
+/* ======================================== */
+/* PLAQUINHA */
+/* ======================================== */
+
+
+.sel-name-plate {
+  position: relative;
+  padding: 16px 38px;
+  border-radius: 999px;
+  border: 6px solid #FFF3D1;
+  background:
+    linear-gradient(
+      to bottom,
+      #FFA900 0%,
+      #F08A00 22%,
+      #D96B00 48%,
+      #BC5200 72%,
+      #A14301 100%
+    );
+  box-shadow:
+    0 10px 20px rgba(0,0,0,0.34),
+    inset 0 3px 4px rgba(255,255,255,0.18),
+    inset 0 -6px 10px rgba(0,0,0,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   min-width: 180px;
+  min-height: 54px;
+  transition:
+    transform .12s ease,
+    filter .2s ease;
+}
+
+.sel-name-plate::before {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 18px;
+  right: 18px;
+  height: 34%;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.20),
+      rgba(255,255,255,0.04),
+      rgba(255,255,255,0)
+    );
+  pointer-events: none;
 }
 
 .sel-name-text {
-  font-family: 'Fredoka', sans-serif;
-  font-weight: 800;
-  font-size: 2rem;
-  color: #ff6b6b;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  -webkit-text-stroke: 1.5px #5c3e00;
-  filter: drop-shadow(0 2px 0 rgba(0,0,0,0.15));
-}
-
-/* --- BOTÃO DE CONFIRMAR GAMIFICADO --- */
-.sel-actions-box {
   position: relative;
-  z-index: 3;
-  width: 100%;
-  display: flex;
-  justify-content: center;
+  z-index: 2;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: clamp(1.2rem, 1.5vw, 1.8rem);
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #FFF8E7;
+  text-shadow:
+    -2px -2px 0 #8A3A00,
+     2px -2px 0 #8A3A00,
+    -2px  2px 0 #8A3A00,
+     2px  2px 0 #8A3A00,
+     0 3px 0 #6E2D00,
+     0 5px 8px rgba(0,0,0,0.35);
 }
 
-.sel-btn-confirm {
-  font-family: 'Fredoka', sans-serif;
-  font-weight: 700;
-  font-size: 1.6rem;
-  color: #ffffff;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  
-  width: 80%;
-  max-width: 280px;
-  height: 64px;
-  border: none;
-  border-radius: 24px;
-  cursor: pointer;
-  
-  /* Cores vibrantes com borda 3D mecânica */
-  background: linear-gradient(180deg, #ffd34e 0%, #e6a61b 100%);
-  border-bottom: 6px solid #b57a07;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.35);
-  -webkit-text-stroke: 1px #5c3e00;
-  
-  transition: all 0.05s ease;
+/* ======================================== */
+/* BOTÃO CHECK */
+/* ======================================== */
+
+
+.sel-confirm-btn {
+  position: relative;
+  width: clamp(58px, 5vw, 74px);
+  height: clamp(58px, 5vw, 74px);
+  border-radius: 50%;
+  border: 6px solid #FEF6E5;
+  background:
+    radial-gradient(
+      circle at top,
+      #A0DF01 0%,
+      #7CCD00 48%,
+      #3BA102 100%
+    );
+  box-shadow:
+    0 10px 18px rgba(0,0,0,0.28),
+    inset 0 4px 6px rgba(255,255,255,0.35),
+    inset 0 -6px 10px rgba(0,0,0,0.16);
   display: flex;
   align-items: center;
   justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition:
+    transform 0.08s ease,
+    filter 0.2s ease;
 }
 
-.sel-btn-confirm:active {
-  transform: translateY(4px);
-  border-bottom: 2px solid #b57a07;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+.sel-confirm-btn::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 18px;
+  right: 18px;
+  height: 32%;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.32),
+      rgba(255,255,255,0)
+    );
+  pointer-events: none;
 }
 
-/* Ajustes Responsivos para Telas Maiores (Desktop) */
-@media (min-width: 768px) {
-  .sel-character-display {
-    height: 380px;
+.sel-confirm-btn:hover {
+  filter: brightness(1.05);
+  transform: scale(1.04);
+}
+
+.sel-confirm-btn:active {
+  transform: scale(0.95);
+}
+
+/* ======================================== */
+/* MOBILE */
+/* ======================================== */
+
+@media (max-width: 767px) {
+
+  .selection-content {
+    padding:
+      18px
+      14px
+      28px;
+
+    gap: 8px;
   }
-  
+
+  /* ======================================== */
+  /* TÍTULO */
+  /* ======================================== */
+
+  .sel-title-text {
+
+    font-size: 2.2rem;
+
+    padding:
+      14px
+      30px;
+
+    border-radius: 24px;
+
+    -webkit-text-stroke: 1.5px #6f3a11;
+  }
+
+  .sel-title-text span {
+    margin-top: 2px;
+  }
+
+  /* ======================================== */
+  /* CARROSSEL */
+  /* ======================================== */
+
   .sel-carousel-wrapper {
-    max-width: 550px;
+    gap: 20px;
   }
+
+  .sel-carousel-row {
+    gap: 14px;
+  }
+
+  /* ======================================== */
+  /* PERSONAGEM */
+  /* ======================================== */
+
+  .sel-character-display {
+
+    width: 72vw;
+
+    height: 58vh;
+
+    max-height: 620px;
+  }
+
+  /* ======================================== */
+  /* SETAS */
+  /* ======================================== */
+
+  .sel-arrow-btn {
+
+    width: 68px;
+    height: 68px;
+
+    border-width: 4px;
+  }
+
+  .sel-arrow-btn img {
+    width: 52%;
+  }
+
+  /* ======================================== */
+  /* BOTTOM */
+  /* ======================================== */
+
+  .sel-bottom-row {
+    gap: 14px;
+  }
+
+  /* ======================================== */
+  /* PLAQUINHA */
+  /* ======================================== */
 
   .sel-name-plate {
-    padding: 12px 48px;
+
+    padding:
+      16px
+      28px;
   }
 
   .sel-name-text {
-    font-size: 2.4rem;
+
+    font-size: 1.5rem;
+
+    -webkit-text-stroke: 1.5px #a25d00;
   }
 
-  .sel-btn-confirm {
-    max-width: 320px;
+  /* ======================================== */
+  /* CHECK */
+  /* ======================================== */
+
+  .sel-confirm-btn {
+
+    width: 66px;
+    height: 66px;
+  }
+}
+
+/* ======================================== */
+/* TABLET */
+/* ======================================== */
+
+@media (min-width: 768px) and (max-width: 1100px) {
+
+  .selection-content {
+
+    padding:
+      20px
+      24px
+      32px;
+
+    gap: 12px;
+  }
+
+  /* ======================================== */
+  /* TÍTULO */
+  /* ======================================== */
+
+  .sel-title-text {
+
+    font-size: 2.8rem;
+
+    padding:
+      16px
+      46px;
+  }
+
+  /* ======================================== */
+  /* PERSONAGEM */
+  /* ======================================== */
+
+  .sel-character-display {
+
+    width: 48vw;
+
+    height: 62vh;
+
+    max-height: 760px;
+  }
+
+  /* ======================================== */
+  /* SETAS */
+  /* ======================================== */
+
+  .sel-arrow-btn {
+
+    width: 78px;
+    height: 78px;
+  }
+
+  /* ======================================== */
+  /* PLAQUINHA */
+  /* ======================================== */
+
+  .sel-name-plate {
+
+    padding:
+      16px
+      34px;
+  }
+
+  .sel-name-text {
+    font-size: 1.7rem;
+  }
+
+  /* ======================================== */
+  /* BOTÃO */
+  /* ======================================== */
+
+  .sel-confirm-btn {
+
+    width: 74px;
     height: 74px;
-    font-size: 1.8rem;
+  }
+}
+
+/* ======================================== */
+/* DESKTOP MUITO GRANDE */
+/* ======================================== */
+
+@media (min-width: 1600px) {
+
+  .sel-character-display {
+    height: 560px;
+  }
+
+  .sel-title-text {
+    font-size: 3rem;
   }
 }

@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800&display=swap');
+
+.home-container {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  font-family: 'Fredoka', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 0;
+  user-select: none;
+}
+
+.home-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(1px);
+  z-index: 1;
+}
+
+.home-bg-mobile {
+  display: block;
+}
+
+.home-bg-desktop {
+  display: none;
+}
+
+.home-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.05);
+  z-index: 2;
+}
+
+.home-top-bar {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.heart-status-box {
+  position: relative;
+  min-width: 228px;
+  height: 52px;
+  margin-left: 4px;
+  padding: 6px 8px 8px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+  background: linear-gradient(180deg, #ffffff 0%, #fffefd 34%, #e8edf1 100%);
+  border: 2px solid rgba(205, 216, 222, 0.95);
+  border-radius: 999px;
+  box-shadow:
+    inset 0 5px 4px rgba(255, 255, 255, 1),
+    inset 0 -7px 9px rgba(137, 157, 170, 0.28),
+    0 3px 0 rgba(176, 190, 199, 0.72),
+    0 7px 12px rgba(54, 71, 84, 0.28);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.heart-status-box:active {
+  transform: scale(0.95);
+}
+
+.heart-icon {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 28px;
+  height: 28px;
+  font-size: 1.58rem;
+  line-height: 1;
+  transform: translateY(1px);
+  text-shadow:
+    0 2px 1px rgba(143, 35, 35, 0.28),
+    0 -1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.heart-icon-empty {
+  opacity: 0.72;
+  filter: grayscale(0.25);
+}
+
+.heart-plus {
+  position: relative;
+  margin-left: 4px;
+  z-index: 3;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1;
+  background:
+    radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.9) 0 10%, transparent 24%),
+    linear-gradient(180deg, #8fe8ff 0%, #51b9ec 58%, #2c9bd9 100%);
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 3px 3px rgba(255, 255, 255, 0.58),
+    inset 0 -4px 5px rgba(27, 111, 176, 0.32),
+    0 3px 0 rgba(42, 129, 184, 0.55),
+    0 5px 8px rgba(33, 84, 120, 0.28);
+  text-shadow:
+    0 2px 0 rgba(31, 125, 178, 0.5),
+    0 -1px 0 rgba(255, 255, 255, 0.42);
+}
+
+.stamps-counter-box {
+  background: #ffede1;
+  border: 3px solid #5c3e00;
+  border-bottom-width: 6px;
+  border-radius: 16px;
+  padding: 6px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.stamp-emoji {
+  display: block;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.stamp-mini-icon {
+  width: 26px;
+  height: auto;
+}
+
+.counter-text {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #5c3e00;
+}
+
+.home-character-stage {
+  position: relative;
+  z-index: 3;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 28px;
+}
+
+.home-character-display {
+  height: 70vh;
+  max-height: 530px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 10px rgba(0, 0, 0, 0.25));
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  animation: breathing 4s infinite ease-in-out;
+}
+
+@keyframes breathing {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02) translateY(-4px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+@media (min-width: 768px) {
+  .home-bg-mobile {
+    display: none;
+  }
+
+  .home-bg-desktop {
+    display: block;
+  }
+
+  .home-character-stage {
+    margin-bottom: -26px;
+  }
+
+  .home-character-display {
+    height: 72vh;
+    max-height: 720px;
+  }
+}

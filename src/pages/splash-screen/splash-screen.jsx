@@ -4,7 +4,7 @@ import './splash-screen.css';
 
 import bgMobile from '../../assets/backgrounds/imagem-splash-mobile.png'; 
 import bgDesktop from '../../assets/backgrounds/imagem-splash.png'; 
-import logoImg from '../../assets/logo/logo-quizadventure.png'; 
+import logoImg from '../../assets/logo/loguinho.png'; 
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap" rel="stylesheet"></link>
 
 export default function SplashScreen() {

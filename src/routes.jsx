@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SplashScreen from './pages/splash-screen/splash-screen';
 import Onboarding from './pages/onboarding/onboarding';
 import CharacterSelection from './pages/character-selection/character-selection';
+import HomePage from './pages/home-page/home-page';
+import MapPage from './pages/map/map';
 
 export default function AppRoutes() {
   return (
@@ -15,6 +17,8 @@ export default function AppRoutes() {
         
         {/* Terceira Tela: Escolha de Personagem */}
         <Route path="/character-selection" element={<CharacterSelection />} />
+        <Route path="/home-page" element={<HomePage />} />
+        <Route path="/map" element={<MapPage />} />
       </Routes>
     </BrowserRouter>
   );

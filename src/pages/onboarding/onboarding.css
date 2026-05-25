@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap');
 
 * {
   margin: 0;
@@ -343,7 +344,6 @@
 
 .btn-start {
   position: fixed;
-
   left: 50%;
   bottom: clamp(18px, 3vw, 34px);
 
@@ -352,78 +352,106 @@
   width: clamp(210px, 26vw, 340px);
   height: clamp(64px, 6vw, 90px);
 
-  border: 6px solid #FFF4D6;
+  border: 6px solid #FFF3D1;
   border-radius: 999px;
 
+  /* GRADIENTE MAIS FECHADO E MENOS ESTOURADO */
   background:
-    radial-gradient(
-      circle at top,
-      #FFE27A 0%,
-      #FFB800 38%,
-      #F28C00 75%,
-      #C96A00 100%
+    linear-gradient(
+      to bottom,
+      #FFA900 0%,
+      #F08A00 22%,
+      #D96B00 48%,
+      #BC5200 72%,
+      #A14301 100%
     );
 
   box-shadow:
-    0 12px 22px rgba(0,0,0,0.32),
-    inset 0 5px 8px rgba(255,255,255,0.38),
-    inset 0 -8px 12px rgba(0,0,0,0.18);
+    0 10px 20px rgba(0,0,0,0.34),
+    inset 0 3px 4px rgba(255,255,255,0.18),
+    inset 0 -6px 10px rgba(0,0,0,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.12);
 
   display: flex;
   align-items: center;
   justify-content: center;
+
   z-index: 70;
   cursor: pointer;
   overflow: hidden;
+
   transition:
     transform .12s ease,
     filter .2s ease;
 }
 
+/* GLOSSY MAIS CONTROLADO */
 .btn-start::before {
   content: "";
   position: absolute;
-  top: 8px;
-  left: 20px;
-  right: 20px;
-  height: 36%;
+
+  top: 7px;
+  left: 18px;
+  right: 18px;
+
+  height: 34%;
   border-radius: 999px;
+
   background:
     linear-gradient(
       to bottom,
-      rgba(255,255,255,0.38),
+      rgba(255,255,255,0.20),
+      rgba(255,255,255,0.04),
       rgba(255,255,255,0)
     );
+
   pointer-events: none;
 }
 
+/* TEXTO GAMIFICADO */
 .btn-start {
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Baloo 2', sans-serif;
+
   font-size: clamp(24px, 2vw, 34px);
   font-weight: 800;
-  letter-spacing: 1px;
-  color: #FFFBEF;
-  text-shadow:
-    0 2px 0 #8A4B00,
-    0 4px 0 #8A4B00,
-    0 5px 10px rgba(0,0,0,0.28);
-}
 
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  color: #FFF8E7;
+
+  /* BORDA FALSA MAIS BONITA */
+  text-shadow:
+    -2px -2px 0 #8A3A00,
+     2px -2px 0 #8A3A00,
+    -2px  2px 0 #8A3A00,
+     2px  2px 0 #8A3A00,
+
+     0 3px 0 #6E2D00,
+     0 5px 8px rgba(0,0,0,0.35);
+}
+/* HOVER */
 .btn-start:hover {
-  filter: brightness(1.05);
+  filter: brightness(1.04);
+
   transform:
     translateX(-50%)
     scale(1.04);
 }
 
+/* CLICK */
 .btn-start:active {
   transform:
     translateX(-50%)
     scale(0.96);
+
+  box-shadow:
+    0 4px 10px rgba(0,0,0,0.28),
+    inset 0 2px 6px rgba(0,0,0,0.35);
 }
 
 /* =========================
-   MOBILE  (já funcionava — sem alteração)
+   MOBILE  
 ========================= */
 
 @media (max-width: 768px) {
