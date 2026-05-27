@@ -1,0 +1,266 @@
+[
+  {
+    "id": "tropical",
+    "name": "Ilha Tropical",
+    "level": "Facil",
+    "stamp": "Selo Tropical",
+    "color": "green",
+    "description": "A aventura comeca entre coqueiros, pontes e cachoeiras. As perguntas sao leves para aquecer a memoria de explorador.",
+    "completionHint": "Procure a areia quente e as ruinas douradas: a proxima parada fica no deserto.",
+    "challenges": [
+      {
+        "id": "tropical-1",
+        "number": 1,
+        "position": [930, 590],
+        "title": "Acampamento Inicial",
+        "type": "choice",
+        "question": "Qual planeta e conhecido como Planeta Vermelho?",
+        "options": ["Marte", "Venus", "Jupiter", "Mercurio"],
+        "answer": "Marte",
+        "hint": "Siga pela trilha branca ate a ponte perto do rio."
+      },
+      {
+        "id": "tropical-2",
+        "number": 2,
+        "position": [870, 372],
+        "title": "Ponte do Rio",
+        "type": "choice",
+        "question": "Quantos continentes existem no modelo mais usado nas escolas do Brasil?",
+        "options": ["6", "5", "7", "8"],
+        "answer": "6",
+        "hint": "A proxima etapa esta na subida verde depois da ponte."
+      },
+      {
+        "id": "tropical-3",
+        "number": 3,
+        "position": [842, 684],
+        "title": "Subida das Palmeiras",
+        "type": "order",
+        "question": "Organize estes eventos do mais antigo para o mais recente.",
+        "items": ["Descobrimento do Brasil", "Independencia do Brasil", "Proclamacao da Republica", "Primeira Copa do Mundo"],
+        "answer": ["Descobrimento do Brasil", "Independencia do Brasil", "Proclamacao da Republica", "Primeira Copa do Mundo"],
+        "hint": "Continue para a curva perto das arvores."
+      },
+      {
+        "id": "tropical-4",
+        "number": 4,
+        "position": [800, 250],
+        "title": "Curva da Cachoeira",
+        "type": "choice",
+        "question": "Qual e o maior oceano da Terra?",
+        "options": ["Pacifico", "Atlantico", "Indico", "Artico"],
+        "answer": "Pacifico",
+        "hint": "A ultima fase tropical fica perto do bau no alto da ilha."
+      },
+      {
+        "id": "tropical-5",
+        "number": 5,
+        "position": [755, 600],
+        "title": "Bau dos Coqueiros",
+        "type": "choice",
+        "question": "Qual animal e conhecido por mudar de cor para se camuflar?",
+        "options": ["Camaleao", "Pinguim", "Cavalo", "Golfinho"],
+        "answer": "Camaleao",
+        "hint": "Ilha Tropical completa. Agora procure a ilha do deserto."
+      }
+    ]
+  },
+  {
+    "id": "desert",
+    "name": "Ilha do Deserto",
+    "level": "Medio",
+    "stamp": "Selo do Deserto",
+    "color": "orange",
+    "description": "Entre piramides e templos antigos, as perguntas pedem mais atencao e um pouco de historia.",
+    "completionHint": "O frio vai testar sua memoria: procure o castelo azul na ilha gelada.",
+    "challenges": [
+      {
+        "id": "desert-6",
+        "number": 6,
+        "position": [970, 1086],
+        "title": "Portao de Areia",
+        "type": "choice",
+        "question": "Qual civilizacao construiu muitas piramides famosas em Gize?",
+        "options": ["Egipcia", "Romana", "Inca", "Viking"],
+        "answer": "Egipcia",
+        "hint": "Suba pela trilha ate os cactos."
+      },
+      {
+        "id": "desert-7",
+        "number": 7,
+        "position": [852, 1098],
+        "title": "Trilha dos Cactos",
+        "type": "choice",
+        "question": "Qual gas as plantas absorvem durante a fotossintese?",
+        "options": ["Dioxido de carbono", "Oxigenio", "Helio", "Hidrogenio"],
+        "answer": "Dioxido de carbono",
+        "hint": "A proxima resposta esta perto da piramide."
+      },
+      {
+        "id": "desert-8",
+        "number": 8,
+        "position": [760, 1240],
+        "title": "Sombra da Piramide",
+        "type": "order",
+        "question": "Organize do menor para o maior.",
+        "items": ["Metro", "Quilometro", "Continente", "Planeta"],
+        "answer": ["Metro", "Quilometro", "Continente", "Planeta"],
+        "hint": "Desca ate as ruinas do templo."
+      },
+      {
+        "id": "desert-9",
+        "number": 9,
+        "position": [780, 1170],
+        "title": "Templo Antigo",
+        "type": "choice",
+        "question": "Quem pintou a Mona Lisa?",
+        "options": ["Leonardo da Vinci", "Michelangelo", "Van Gogh", "Picasso"],
+        "answer": "Leonardo da Vinci",
+        "hint": "Siga para a parte baixa da trilha."
+      },
+      {
+        "id": "desert-10",
+        "number": 10,
+        "position": [685, 1288],
+        "title": "Oasis Secreto",
+        "type": "choice",
+        "question": "Qual e a capital da Franca?",
+        "options": ["Paris", "Roma", "Lisboa", "Berlim"],
+        "answer": "Paris",
+        "hint": "Ilha do Deserto completa. Va para a ilha gelada."
+      }
+    ]
+  },
+  {
+    "id": "ice",
+    "name": "Ilha do Gelo",
+    "level": "Dificil",
+    "stamp": "Selo do Gelo",
+    "color": "blue",
+    "description": "No gelo, cada passo conta. As perguntas misturam ciencia, mundo e sequencias.",
+    "completionHint": "A ultima ilha esta em chamas. Procure o vulcao e prepare-se.",
+    "challenges": [
+      {
+        "id": "ice-11",
+        "number": 11,
+        "position": [281, 421],
+        "title": "Cristais Azuis",
+        "type": "choice",
+        "question": "Qual e o elemento quimico representado por O?",
+        "options": ["Oxigenio", "Ouro", "Osmio", "Prata"],
+        "answer": "Oxigenio",
+        "hint": "Siga a curva congelada ate a proxima ponte."
+      },
+      {
+        "id": "ice-12",
+        "number": 12,
+        "position": [365, 520],
+        "title": "Ponte Congelada",
+        "type": "choice",
+        "question": "Qual pais tem a maior populacao do mundo atualmente?",
+        "options": ["India", "China", "Brasil", "Canada"],
+        "answer": "India",
+        "hint": "Continue ate o lado esquerdo da ilha."
+      },
+      {
+        "id": "ice-13",
+        "number": 13,
+        "position": [342, 642],
+        "title": "Lago de Gelo",
+        "type": "order",
+        "question": "Organize as camadas da atmosfera da mais baixa para a mais alta.",
+        "items": ["Troposfera", "Estratosfera", "Mesosfera", "Termosfera"],
+        "answer": ["Troposfera", "Estratosfera", "Mesosfera", "Termosfera"],
+        "hint": "A proxima fase fica perto dos blocos de gelo."
+      },
+      {
+        "id": "ice-14",
+        "number": 14,
+        "position": [236, 742],
+        "title": "Neve Profunda",
+        "type": "choice",
+        "question": "Qual instrumento mede a pressao atmosferica?",
+        "options": ["Barometro", "Termometro", "Anemometro", "Higrometro"],
+        "answer": "Barometro",
+        "hint": "Volte para perto do castelo para fechar a ilha."
+      },
+      {
+        "id": "ice-15",
+        "number": 15,
+        "position": [112, 716],
+        "title": "Castelo Azul",
+        "type": "choice",
+        "question": "Em qual continente fica a cordilheira dos Andes?",
+        "options": ["America do Sul", "Europa", "Asia", "Africa"],
+        "answer": "America do Sul",
+        "hint": "Ilha Gelada completa. Agora procure a ilha vulcanica."
+      }
+    ]
+  },
+  {
+    "id": "volcano",
+    "name": "Ilha de Lava",
+    "level": "Especialista",
+    "stamp": "Selo de Lava",
+    "color": "red",
+    "description": "A fase final tem lava, ruinas sombrias e perguntas mais exigentes para fechar a aventura.",
+    "completionHint": "Voce completou todas as ilhas. Seu passaporte esta cheio de gloria.",
+    "challenges": [
+      {
+        "id": "volcano-16",
+        "number": 16,
+        "position": [288, 1036],
+        "title": "Entrada da Lava",
+        "type": "choice",
+        "question": "Qual camada da Terra fica entre a crosta e o nucleo?",
+        "options": ["Manto", "Atmosfera", "Litosfera", "Hidrosfera"],
+        "answer": "Manto",
+        "hint": "Siga pela trilha quente em direcao ao centro."
+      },
+      {
+        "id": "volcano-17",
+        "number": 17,
+        "position": [302, 946],
+        "title": "Trilha de Magma",
+        "type": "choice",
+        "question": "Qual cientista formulou as leis do movimento classicas?",
+        "options": ["Isaac Newton", "Albert Einstein", "Marie Curie", "Galileu Galilei"],
+        "answer": "Isaac Newton",
+        "hint": "Continue para a passagem perto do rio de lava."
+      },
+      {
+        "id": "volcano-18",
+        "number": 18,
+        "position": [256, 1050],
+        "title": "Rio Incandescente",
+        "type": "order",
+        "question": "Organize estas eras geologicas da mais antiga para a mais recente.",
+        "items": ["Paleozoica", "Mesozoica", "Cenozoica", "Atual"],
+        "answer": ["Paleozoica", "Mesozoica", "Cenozoica", "Atual"],
+        "hint": "A proxima fase fica na ponte escura."
+      },
+      {
+        "id": "volcano-19",
+        "number": 19,
+        "position": [388, 1046],
+        "title": "Ponte Sombria",
+        "type": "choice",
+        "question": "Qual obra comeca com a frase 'No meio do caminho tinha uma pedra'?",
+        "options": ["No Meio do Caminho", "Os Lusiadas", "Dom Casmurro", "Iracema"],
+        "answer": "No Meio do Caminho",
+        "hint": "Va para a fortaleza final."
+      },
+      {
+        "id": "volcano-20",
+        "number": 20,
+        "position": [452, 1180],
+        "title": "Fortaleza Final",
+        "type": "choice",
+        "question": "Qual e o nome do processo em que liquido vira gas abaixo do ponto de ebulicao?",
+        "options": ["Evaporacao", "Fusao", "Condensacao", "Sublimacao"],
+        "answer": "Evaporacao",
+        "hint": "Parabens, voce concluiu a aventura inteira."
+      }
+    ]
+  }
+]

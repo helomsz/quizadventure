@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './home-page.css';
 import AppNav from '../../components/app-nav/app-nav';
 
@@ -12,24 +12,18 @@ import lunaImg from '../../assets/personagens/luna.png';
 
 export default function HomePage() {
   const [selectedCharacter, setSelectedCharacter] = useState('helo');
-  const [stampsCount, setStampsCount] = useState(0);
 
   const characterImages = {
     helo: heloImg,
     milo: miloImg,
     leo: leoImg,
-    luna: lunaImg
+    luna: lunaImg,
   };
 
   useEffect(() => {
     const savedCharacter = localStorage.getItem('mapventure_character');
     if (savedCharacter) {
       setSelectedCharacter(savedCharacter);
-    }
-
-    const savedStamps = localStorage.getItem('mapventure_stamps_count');
-    if (savedStamps) {
-      setStampsCount(parseInt(savedStamps, 10));
     }
   }, []);
 
@@ -43,22 +37,6 @@ export default function HomePage() {
       <img src={bgDesktop} alt="" className="home-bg home-bg-desktop" />
 
       <div className="home-overlay" />
-
-      <header className="home-top-bar">
-        <div className="heart-status-box" onClick={() => alert('Em breve: Sistema de Conquistas e Afeto!')}>
-          <span className="heart-icon">❤️</span>
-          <span className="heart-icon">❤️</span>
-          <span className="heart-icon">❤️</span>
-          <span className="heart-icon">❤️</span>
-          <span className="heart-icon heart-icon-empty">🤍</span>
-          <span className="heart-plus">+</span>
-        </div>
-
-        <div className="stamps-counter-box">
-          <span className="stamp-emoji">🏅</span>
-          <span className="counter-text">{stampsCount} SELOS</span>
-        </div>
-      </header>
 
       <main className="home-character-stage">
         <img

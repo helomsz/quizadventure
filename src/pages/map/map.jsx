@@ -1,35 +1,173 @@
-import React from 'react';
-import { MapContainer, ImageOverlay, Marker, Popup } from 'react-leaflet';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  ArrowLeft,
+  Check,
+  Flame,
+  Landmark,
+  Lock,
+  Snowflake,
+  Sparkles,
+  TreePalm,
+  X,
+  Plus,
+  Minus,
+} from 'lucide-react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { MapContainer, ImageOverlay, Marker, useMap } from 'react-leaflet';
+import { useNavigate } from 'react-router-dom';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './map.css';
-import AppNav from '../../components/app-nav/app-nav';
+import quizIslands from '../../data/quiz-questions.json';
+import {
+  canPlay,
+  COMPLETED_KEY,
+  getHearts,
+  loadJson,
+} from '../../utils/game-state';
 
 import imagemMapaCompleto from '../../assets/backgrounds/fundo-mapa.png';
 
+const islandIcons = {
+  tropical: TreePalm,
+  desert: Landmark,
+  ice: Snowflake,
+  volcano: Flame,
+};
+
+const withIsland = (island, challenge) => ({ ...challenge, island });
+const firstIsland = quizIslands[0];
+const firstChallenge = withIsland(firstIsland, firstIsland.challenges[0]);
+
+function MapFocus({ position }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (position) {
+      map.flyTo(position, Math.max(map.getZoom(), 1), { duration: 0.7 });
+    }
+  }, [map, position]);
+
+  return null;
+}
+
+function MapZoomControls() {
+  const map = useMap();
+
+  return (
+    <div className="map-zoom-controls">
+      <button
+        type="button"
+        className="map-glossy-icon-button"
+        onClick={() => map.zoomIn()}
+        aria-label="Aproximar mapa"
+      >
+        <Plus size={30} strokeWidth={4} />
+      </button>
+      <button
+        type="button"
+        className="map-glossy-icon-button"
+        onClick={() => map.zoomOut()}
+        aria-label="Reduzir mapa"
+      >
+        <Minus size={30} strokeWidth={4} />
+      </button>
+    </div>
+  );
+}
+
 export default function MapPage() {
+  const navigate = useNavigate();
   const mapWidth = 1402;
   const mapHeight = 1122;
   const bounds = [[0, 0], [mapHeight, mapWidth]];
-  const mapStartPosition = [842, 631];
+  const mapStartPosition = firstChallenge.position;
 
-  const createEmojiMarker = (emoji) => {
+  const [completed, setCompleted] = useState(() => loadJson(COMPLETED_KEY, []));
+  const [selectedChallenge, setSelectedChallenge] = useState(firstChallenge);
+  const [feedback, setFeedback] = useState(null);
+
+  const allChallenges = useMemo(
+    () => quizIslands.flatMap((island) =>
+      island.challenges.map((challenge) => withIsland(island, challenge))
+    ),
+    []
+  );
+
+  const selectedIsland = selectedChallenge?.island;
+  const IslandIcon = selectedIsland ? islandIcons[selectedIsland.id] : TreePalm;
+  const completedSet = useMemo(() => new Set(completed), [completed]);
+
+  const islandProgress = useMemo(
+    () => quizIslands.map((island) => ({
+      id: island.id,
+      isComplete: island.challenges.every((challenge) => completedSet.has(challenge.id)),
+    })),
+    [completedSet]
+  );
+
+  const isIslandUnlocked = (islandId) => {
+    const islandIndex = quizIslands.findIndex((island) => island.id === islandId);
+    if (islandIndex <= 0) return true;
+
+    return islandProgress[islandIndex - 1]?.isComplete;
+  };
+
+  const selectedIslandCompletedCount = selectedIsland
+    ? selectedIsland.challenges.filter((challenge) => completedSet.has(challenge.id)).length
+    : 0;
+
+  const createLevelIcon = (challenge) => {
+    const isDone = completedSet.has(challenge.id);
+    const isLocked = !isIslandUnlocked(challenge.island.id);
+    const completeIcon = isDone
+      ? `<span class="map-level-complete-icon">${renderToStaticMarkup(<Check size={15} strokeWidth={4} />)}</span>`
+      : '';
+
     return L.divIcon({
-      html: `<div class="custom-marker-icon">${emoji}</div>`,
-      className: 'leaflet-marker-custom',
-      iconSize: [40, 40],
-      iconAnchor: [20, 40]
+      html: `<button class="map-level-button map-level-button-${challenge.island.color}${isDone ? ' is-complete' : ''}${isLocked ? ' is-locked' : ''}" type="button">${challenge.number}${completeIcon}</button>`,
+      className: 'map-level-marker',
+      iconSize: [54, 54],
+      iconAnchor: [27, 27],
     });
   };
 
-  const pontosDeInteresse = [
-    { id: 1, nome: 'Portao Inicial', coordenadas: [281, 421], emoji: '🚪', descricao: 'Onde tudo comeca!' },
-    { id: 2, nome: 'Lago Misterioso', coordenadas: [561, 981], emoji: '⚓', descricao: 'Um quiz profundo espera por voce aqui.' },
-    { id: 3, nome: 'Bau de Reliquias', coordenadas: mapStartPosition, emoji: '🏴‍☠️', descricao: 'Desbloqueie para pegar sua pista final!' }
-  ];
+  const selectIsland = (islandId) => {
+    if (!isIslandUnlocked(islandId)) return;
+
+    const island = quizIslands.find((item) => item.id === islandId);
+    if (!island) return;
+
+    setSelectedChallenge(withIsland(island, island.challenges[0]));
+    setFeedback(null);
+  };
+
+  const openQuestion = () => {
+    if (!selectedChallenge) return;
+    if (!canPlay()) {
+      setFeedback({
+        type: 'wrong',
+        title: 'Sem coracoes.',
+        message: 'Aguarde a recuperacao dos coracoes para jogar novamente.',
+      });
+      return;
+    }
+
+    setFeedback(null);
+    navigate(`/quiz/${selectedChallenge.id}`);
+  };
 
   return (
     <div className="map-page-container">
+      <button
+        type="button"
+        className="map-back-button map-glossy-icon-button"
+        onClick={() => navigate('/home-page')}
+        aria-label="Voltar para home"
+      >
+        <ArrowLeft size={30} strokeWidth={4} />
+      </button>
+
       <MapContainer
         crs={L.CRS.Simple}
         center={mapStartPosition}
@@ -41,31 +179,120 @@ export default function MapPage() {
         zoomSnap={0.5}
         zoomControl={false}
       >
+        <MapFocus position={selectedChallenge?.position} />
+        <MapZoomControls />
         <ImageOverlay url={imagemMapaCompleto} bounds={bounds} />
 
-        {pontosDeInteresse.map((ponto) => (
+        {allChallenges.map((challenge) => (
           <Marker
-            key={ponto.id}
-            position={ponto.coordenadas}
-            icon={createEmojiMarker(ponto.emoji)}
-          >
-            <Popup>
-              <div className="map-popup-content">
-                <b className="map-popup-title">{ponto.nome}</b>
-                <p className="map-popup-description">{ponto.descricao}</p>
-                <button
-                  className="map-popup-button"
-                  onClick={() => alert(`Iniciando desafio do ponto ${ponto.nome}!`)}
-                >
-                  Jogar
-                </button>
-              </div>
-            </Popup>
-          </Marker>
+            key={`${challenge.id}-${completedSet.has(challenge.id)}`}
+            position={challenge.position}
+            icon={createLevelIcon(challenge)}
+            eventHandlers={{
+              click: () => {
+                if (!isIslandUnlocked(challenge.island.id)) return;
+
+                setSelectedChallenge(challenge);
+                setFeedback(null);
+              },
+            }}
+          />
         ))}
       </MapContainer>
 
-      <AppNav floating />
+      {selectedChallenge && (
+        <section className={`map-island-card map-island-card-${selectedIsland.color}`}>
+          <div className="map-card-shine" />
+
+          <button
+            type="button"
+            className="map-card-close"
+            onClick={() => setSelectedChallenge(null)}
+            aria-label="Fechar"
+          >
+            <X size={22} strokeWidth={4} />
+          </button>
+
+          <header className="map-island-header">
+            <div className={`map-island-icon map-island-icon-${selectedIsland.color}`}>
+              <IslandIcon size={34} strokeWidth={3} />
+              <Sparkles className="map-island-sparkle" size={18} strokeWidth={3} />
+            </div>
+            <div className="map-island-heading">
+              <div className={`map-level-badge map-level-badge-${selectedIsland.color}`}>
+                Nivel {selectedIsland.level}
+              </div>
+              <h2>{selectedIsland.name}</h2>
+            </div>
+          </header>
+
+          <div className="map-stage-title">
+            <span>Fase {selectedChallenge.number}</span>
+            <h3>{selectedChallenge.title}</h3>
+          </div>
+
+          <p className="map-island-description">{selectedIsland.description}</p>
+
+          <div className="map-progress-panel">
+            <div className="map-progress-copy">
+              <span>Progresso da ilha</span>
+              <strong>{selectedIslandCompletedCount}/{selectedIsland.challenges.length}</strong>
+            </div>
+            <div
+              className="map-progress-line"
+              style={{
+                '--progress': `${(selectedIslandCompletedCount / selectedIsland.challenges.length) * 100}%`,
+              }}
+            >
+              {selectedIsland.challenges.map((challenge) => {
+                const isDone = completedSet.has(challenge.id);
+                const isActive = selectedChallenge.id === challenge.id;
+                const isLocked = !isIslandUnlocked(selectedIsland.id);
+
+                return (
+                  <button
+                    key={challenge.id}
+                    type="button"
+                    className={`map-progress-point${isDone ? ' is-done' : ''}${isActive ? ' is-active' : ''}${isLocked ? ' is-locked' : ''}`}
+                    onClick={() => setSelectedChallenge(withIsland(selectedIsland, challenge))}
+                    aria-label={`Fase ${challenge.number}`}
+                  >
+                    {isLocked ? <Lock size={14} strokeWidth={3} /> : isDone ? <Check size={15} strokeWidth={4} /> : challenge.number}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="map-island-nav" aria-label="Navegacao entre ilhas">
+            {quizIslands.map((island, index) => (
+              <button
+                key={island.id}
+                type="button"
+                className={`map-island-nav-button map-island-nav-button-${island.color}${selectedIsland.id === island.id ? ' is-active' : ''}${!isIslandUnlocked(island.id) ? ' is-locked' : ''}`}
+                onClick={() => selectIsland(island.id)}
+                disabled={!isIslandUnlocked(island.id)}
+                aria-label={!isIslandUnlocked(island.id) ? `${island.name} bloqueada` : island.name}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
+
+          {feedback && (
+            <div className={`map-feedback map-feedback-${feedback.type}`}>
+              <strong>{feedback.title}</strong>
+              <span>{feedback.message}</span>
+            </div>
+          )}
+
+          <div className="map-card-footer">
+            <button type="button" className="map-play-button" onClick={openQuestion}>
+              {getHearts() > 0 ? 'Jogar' : 'Aguarde'}
+            </button>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
