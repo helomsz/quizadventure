@@ -13,7 +13,7 @@ const navItems = [
   { path: '/home-page', label: 'Inicio', icon: cabanaIcon },
   { path: '/map', label: 'Mapa', icon: mapinhaIcon },
   { path: '/passport', label: 'Selos', icon: passaporteIcon },
-  { path: '/inventory', label: 'Inventario', icon: mochilinhaIcon },
+  { path: '/inventory', label: 'Inventário', icon: mochilinhaIcon },
   { path: '/character-selection', label: 'Trocar', icon: chapeuIcon },
 ];
 

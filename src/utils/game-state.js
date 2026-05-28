@@ -37,8 +37,11 @@ export const getHearts = () => {
     return MAX_HEARTS;
   }
 
-  const saved = Number(localStorage.getItem(HEARTS_KEY));
-  return Number.isFinite(saved) && saved >= 0 ? saved : MAX_HEARTS;
+  const saved = localStorage.getItem(HEARTS_KEY);
+  if (saved === null) return MAX_HEARTS;
+
+  const hearts = Number(saved);
+  return Number.isFinite(hearts) && hearts >= 0 ? Math.min(hearts, MAX_HEARTS) : MAX_HEARTS;
 };
 
 export const loseHeart = () => {
@@ -62,3 +65,16 @@ export const saveStamps = (stamps) => {
 };
 
 export const canPlay = () => getHearts() > 0;
+
+export const resetGameState = () => {
+  [
+    HEARTS_KEY,
+    HEART_RECOVERY_KEY,
+    STAMPS_KEY,
+    STAMPS_COUNT_KEY,
+    COMPLETED_KEY,
+    'mapventure_character',
+  ].forEach((key) => localStorage.removeItem(key));
+
+  emitGameStateChange();
+};

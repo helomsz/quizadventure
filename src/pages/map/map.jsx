@@ -38,6 +38,22 @@ const islandIcons = {
 const withIsland = (island, challenge) => ({ ...challenge, island });
 const firstIsland = quizIslands[0];
 const firstChallenge = withIsland(firstIsland, firstIsland.challenges[0]);
+const lastIsland = quizIslands[quizIslands.length - 1];
+const lastChallenge = withIsland(lastIsland, lastIsland.challenges[lastIsland.challenges.length - 1]);
+
+const getNextChallengeInIsland = (island, completedSet) => {
+  const nextChallenge = island.challenges.find((challenge) => !completedSet.has(challenge.id));
+  return withIsland(island, nextChallenge || island.challenges[island.challenges.length - 1]);
+};
+
+const getNextAdventureChallenge = (completed = []) => {
+  const completedSet = new Set(completed);
+  const nextIsland = quizIslands.find((island) =>
+    island.challenges.some((challenge) => !completedSet.has(challenge.id))
+  );
+
+  return nextIsland ? getNextChallengeInIsland(nextIsland, completedSet) : lastChallenge;
+};
 
 function MapFocus({ position }) {
   const map = useMap();
@@ -83,8 +99,10 @@ export default function MapPage() {
   const bounds = [[0, 0], [mapHeight, mapWidth]];
   const mapStartPosition = firstChallenge.position;
 
-  const [completed, setCompleted] = useState(() => loadJson(COMPLETED_KEY, []));
-  const [selectedChallenge, setSelectedChallenge] = useState(firstChallenge);
+  const [completed] = useState(() => loadJson(COMPLETED_KEY, []));
+  const [selectedChallenge, setSelectedChallenge] = useState(() =>
+    getNextAdventureChallenge(loadJson(COMPLETED_KEY, []))
+  );
   const [feedback, setFeedback] = useState(null);
 
   const allChallenges = useMemo(
@@ -138,7 +156,7 @@ export default function MapPage() {
     const island = quizIslands.find((item) => item.id === islandId);
     if (!island) return;
 
-    setSelectedChallenge(withIsland(island, island.challenges[0]));
+    setSelectedChallenge(getNextChallengeInIsland(island, completedSet));
     setFeedback(null);
   };
 
@@ -153,8 +171,13 @@ export default function MapPage() {
       return;
     }
 
+    const nextChallenge = completedSet.has(selectedChallenge.id)
+      ? getNextChallengeInIsland(selectedChallenge.island, completedSet)
+      : selectedChallenge;
+
+    setSelectedChallenge(nextChallenge);
     setFeedback(null);
-    navigate(`/quiz/${selectedChallenge.id}`);
+    navigate(`/quiz/${nextChallenge.id}`);
   };
 
   return (
