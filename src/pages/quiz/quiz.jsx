@@ -21,13 +21,25 @@ import {
   resetGameState,
   saveJson,
   saveStamps,
+  unplacePassportStamp,
 } from '../../utils/game-state';
+import seloTropical from '../../assets/selos/selo-tropical.png';
+import seloDeserto from '../../assets/selos/selo-deserto.png';
+import seloGelo from '../../assets/selos/selo-gelo.png';
+import seloLava from '../../assets/selos/selo-lava.png';
 
 const islandIcons = {
   tropical: TreePalm,
   desert: Landmark,
   ice: Snowflake,
   volcano: Flame,
+};
+
+const stampImages = {
+  tropical: seloTropical,
+  desert: seloDeserto,
+  ice: seloGelo,
+  volcano: seloLava,
 };
 
 const sameOrder = (current, answer) =>
@@ -86,6 +98,7 @@ export default function QuizPage() {
 
     const nextStamps = [...stamps, island.id];
     setStamps(nextStamps);
+    unplacePassportStamp(island.id);
     saveStamps(nextStamps);
     return true;
   };
@@ -129,12 +142,23 @@ export default function QuizPage() {
     const gotStamp = awardStampIfNeeded(activeQuestion, nextCompleted);
     const finishedAdventure = allChallenges.every((challenge) => nextCompleted.includes(challenge.id));
 
+    if (gotStamp) {
+      setFeedback({
+        type: 'stamp',
+        title: 'SELO DESBLOQUEADO!',
+        message: activeQuestion.island.completionHint,
+        stamp: activeQuestion.island.stamp,
+        islandId: activeQuestion.island.id,
+      });
+      return;
+    }
+
     if (finishedAdventure) {
       setFeedback({
         type: 'complete',
-        title: 'VOCE CONSEGUIU!!!',
+        title: 'VOCÊ CONSEGUIU!!!',
         message:
-          'Voce coletou todos os selos da aventura. Cole seus selos no passaporte para conquistar o passaporte completo e preparar a viagem para uma nova ilha.',
+          'Você coletou todos os selos da aventura. Cole seus selos no passaporte para conquistar o passaporte completo e preparar a viagem para uma nova ilha.',
       });
       return;
     }
@@ -247,7 +271,7 @@ export default function QuizPage() {
 
       {feedback && (
         <div className="quiz-result-overlay" role="presentation">
-          {feedback.type === 'complete' && (
+          {(feedback.type === 'complete' || feedback.type === 'stamp') && (
             <div className="quiz-confetti" aria-hidden="true">
               {Array.from({ length: 44 }, (_, index) => {
                 const left = (index * 37) % 100;
@@ -289,6 +313,8 @@ export default function QuizPage() {
             <div className="quiz-result-icon">
               {feedback.type === 'right' ? (
                 <Check size={78} strokeWidth={4.5} />
+              ) : feedback.type === 'stamp' ? (
+                <img src={stampImages[feedback.islandId]} alt={feedback.stamp} />
               ) : feedback.type === 'complete' ? (
                 <Trophy size={78} strokeWidth={4.2} />
               ) : (
@@ -299,7 +325,15 @@ export default function QuizPage() {
             <h2 id="quiz-result-title">{feedback.title}</h2>
             <p>{feedback.message}</p>
 
-            {feedback.type === 'complete' ? (
+            {feedback.type === 'stamp' ? (
+              <button
+                type="button"
+                className="quiz-result-action quiz-stamp-action"
+                onClick={() => navigate('/passport')}
+              >
+                Ir para o passaporte
+              </button>
+            ) : feedback.type === 'complete' ? (
               <div className="quiz-complete-actions">
                 <button
                   type="button"

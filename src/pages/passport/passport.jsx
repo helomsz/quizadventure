@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import quizIslands from '../../data/quiz-questions.json';
-import { getStamps } from '../../utils/game-state';
+import { getStamps, PASSPORT_PLACED_KEY } from '../../utils/game-state';
 import seloTropical from '../../assets/selos/selo-tropical.png';
 import seloDeserto from '../../assets/selos/selo-deserto.png';
 import seloGelo from '../../assets/selos/selo-gelo.png';
@@ -12,8 +12,6 @@ import passportDesktopBg from '../../assets/backgrounds/passaporte-aberto-deskto
 import arrowIcon from '../../assets/icons/icone-seta.svg';
 import './passport.css';
 
-const PASSPORT_PLACED_KEY = 'mapventure_passport_placed_stamps';
-
 const stampImages = {
   tropical: seloTropical,
   desert: seloDeserto,
@@ -21,16 +19,27 @@ const stampImages = {
   volcano: seloLava,
 };
 
-const stampSlots = {
+const desktopStampSlots = {
   tropical: { x: 25.9, y: 33.9 },
   desert: { x: 37.1, y: 65.9 },
   ice: { x: 62.6, y: 33.8 },
   volcano: { x: 73.2, y: 64.8 },
 };
 
+const mobileStampSlots = {
+  tropical: { x: 25, y: 42.9 },
+  desert: { x: 35, y: 52.7 },
+  ice: { x: 62.5, y: 44 },
+  volcano: { x: 74.1, y: 53.6 },
+};
+
 const loadPlacedStamps = () => {
   try {
-    return JSON.parse(localStorage.getItem(PASSPORT_PLACED_KEY)) || {};
+    const placedStamps = JSON.parse(localStorage.getItem(PASSPORT_PLACED_KEY)) || {};
+
+    return Object.fromEntries(
+      Object.entries(placedStamps).filter(([, value]) => value?.placedAt)
+    );
   } catch {
     return {};
   }
@@ -39,9 +48,27 @@ const loadPlacedStamps = () => {
 export default function PassportPage() {
   const navigate = useNavigate();
   const slotsRef = useRef({});
+  const [isMobile, setIsMobile] = useState(() => (
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches
+  ));
   const earnedStamps = useMemo(() => new Set(getStamps()), []);
   const [placedStamps, setPlacedStamps] = useState(loadPlacedStamps);
   const [draggingStamp, setDraggingStamp] = useState(null);
+  const stampSlots = isMobile ? mobileStampSlots : desktopStampSlots;
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const updateIsMobile = () => setIsMobile(mediaQuery.matches);
+
+    updateIsMobile();
+    mediaQuery.addEventListener('change', updateIsMobile);
+
+    return () => {
+      mediaQuery.removeEventListener('change', updateIsMobile);
+    };
+  }, []);
 
   const savePlacedStamps = (nextPlacedStamps) => {
     setPlacedStamps(nextPlacedStamps);
@@ -80,7 +107,10 @@ export default function PassportPage() {
         && event.clientY <= slotRect.bottom;
 
       if (hitSlot) {
-        savePlacedStamps({ ...placedStamps, [draggingStamp.id]: true });
+        savePlacedStamps({
+          ...placedStamps,
+          [draggingStamp.id]: { placedAt: Date.now() },
+        });
       }
 
       setDraggingStamp(null);
@@ -177,7 +207,7 @@ export default function PassportPage() {
 
       {draggingIsland && (
         <div
-          className="passport-dragging-stamp"
+          className={`passport-dragging-stamp passport-dragging-stamp-${draggingIsland.id}`}
           style={{ left: draggingStamp.x, top: draggingStamp.y }}
           aria-hidden="true"
         >

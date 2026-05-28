@@ -4,6 +4,7 @@ export const HEARTS_KEY = 'mapventure_hearts';
 export const HEART_RECOVERY_KEY = 'mapventure_heart_recovery_at';
 export const STAMPS_KEY = 'mapventure_stamps';
 export const STAMPS_COUNT_KEY = 'mapventure_stamps_count';
+export const PASSPORT_PLACED_KEY = 'mapventure_passport_placed_stamps';
 export const COMPLETED_KEY = 'mapventure_completed_challenges';
 export const GAME_STATE_EVENT = 'mapventure-game-state-change';
 
@@ -64,6 +65,16 @@ export const saveStamps = (stamps) => {
   emitGameStateChange();
 };
 
+export const unplacePassportStamp = (stampId) => {
+  const placedStamps = loadJson(PASSPORT_PLACED_KEY, {});
+
+  if (!placedStamps[stampId]) return;
+
+  const nextPlacedStamps = { ...placedStamps };
+  delete nextPlacedStamps[stampId];
+  saveJson(PASSPORT_PLACED_KEY, nextPlacedStamps);
+};
+
 export const canPlay = () => getHearts() > 0;
 
 export const resetGameState = () => {
@@ -72,6 +83,7 @@ export const resetGameState = () => {
     HEART_RECOVERY_KEY,
     STAMPS_KEY,
     STAMPS_COUNT_KEY,
+    PASSPORT_PLACED_KEY,
     COMPLETED_KEY,
     'mapventure_character',
   ].forEach((key) => localStorage.removeItem(key));

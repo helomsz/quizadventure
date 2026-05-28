@@ -5,6 +5,7 @@ import {
   Flame,
   Landmark,
   Lock,
+  Play,
   Snowflake,
   Sparkles,
   TreePalm,
@@ -24,9 +25,13 @@ import {
   COMPLETED_KEY,
   getHearts,
   loadJson,
+  resetGameState,
 } from '../../utils/game-state';
 
 import imagemMapaCompleto from '../../assets/backgrounds/fundo-mapa.png';
+import pauseIcon from '../../assets/icons/pause.svg';
+import homeIcon from '../../assets/icons/home.svg';
+import refreshIcon from '../../assets/icons/refresh.svg';
 
 const islandIcons = {
   tropical: TreePalm,
@@ -104,6 +109,7 @@ export default function MapPage() {
     getNextAdventureChallenge(loadJson(COMPLETED_KEY, []))
   );
   const [feedback, setFeedback] = useState(null);
+  const [isPaused, setIsPaused] = useState(false);
 
   const allChallenges = useMemo(
     () => quizIslands.flatMap((island) =>
@@ -180,6 +186,11 @@ export default function MapPage() {
     navigate(`/quiz/${nextChallenge.id}`);
   };
 
+  const replayAdventure = () => {
+    resetGameState();
+    navigate('/');
+  };
+
   return (
     <div className="map-page-container">
       <button
@@ -189,6 +200,15 @@ export default function MapPage() {
         aria-label="Voltar para home"
       >
         <ArrowLeft size={30} strokeWidth={4} />
+      </button>
+
+      <button
+        type="button"
+        className="map-pause-button map-glossy-icon-button"
+        onClick={() => setIsPaused(true)}
+        aria-label="Pausar"
+      >
+        <img src={pauseIcon} alt="" className="map-pause-icon" draggable="false" />
       </button>
 
       <MapContainer
@@ -315,6 +335,57 @@ export default function MapPage() {
             </button>
           </div>
         </section>
+      )}
+
+      {isPaused && (
+        <div className="map-pause-overlay" role="presentation">
+          <section
+            className="map-pause-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="map-pause-title"
+          >
+            <button
+              type="button"
+              className="map-pause-close"
+              onClick={() => setIsPaused(false)}
+              aria-label="Fechar pausa"
+            >
+              <X size={34} strokeWidth={4.2} />
+            </button>
+
+            <h2 id="map-pause-title">PAUSE</h2>
+
+            <div className="map-pause-actions">
+              <button
+                type="button"
+                className="map-pause-action map-pause-action-green"
+                onClick={() => setIsPaused(false)}
+              >
+                <Play size={42} strokeWidth={4.2} fill="currentColor" />
+                <span>Continuar</span>
+              </button>
+
+              <button
+                type="button"
+                className="map-pause-action map-pause-action-green"
+                onClick={replayAdventure}
+              >
+                <img src={refreshIcon} alt="" className="map-pause-action-icon" draggable="false" />
+                <span>Jogar novamente</span>
+              </button>
+
+              <button
+                type="button"
+                className="map-pause-action map-pause-action-blue"
+                onClick={() => navigate('/home-page')}
+              >
+                <img src={homeIcon} alt="" className="map-pause-action-icon" draggable="false" />
+                <span>Ir para home</span>
+              </button>
+            </div>
+          </section>
+        </div>
       )}
     </div>
   );

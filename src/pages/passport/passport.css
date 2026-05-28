@@ -81,10 +81,14 @@
   transform: scale(0.95);
 }
 
-.arrow-left img {
-  width: 60%;
+.arrow-left {
+  position: relative;
+  z-index: 1;
+  width: 58%;
+  height: 58%;
+  object-fit: contain;
   filter: brightness(0) invert(1);
-  transform: rotate(90deg);
+  transform: rotate(180deg);
 }
 
 
@@ -220,36 +224,30 @@
   .passport-back-button {
     top: max(20px, env(safe-area-inset-top));
     left: 18px;
-    width: 50px;
-    height: 50px;
+    width: 55px;
+    height: 55px;
     border-width: 4px;
+  }
+
+  .arrow-left {
+    width: 58%;
+    height: 58%;
   }
 
   .passport-stamp-slot {
     --slot-size: clamp(30px, 74vw, 110px);
   }
 
-  .passport-stamp-slot-tropical {
-    --slot-x: 18%;
-    --slot-y: 49%;
-  }
-
   .passport-stamp-slot-desert {
-    --slot-x: 38%;
-    --slot-y: 55%;
-    --slot-size: clamp(250px, 80vw, 335px);
+    --slot-size: clamp(50px, 80vw, 115px);
   }
 
   .passport-stamp-slot-ice {
-    --slot-x: 61.5%;
-    --slot-y: 42.5%;
-    --slot-size: clamp(235px, 76vw, 320px);
+    --slot-size: clamp(50px, 76vw, 135px);
   }
 
   .passport-stamp-slot-volcano {
-    --slot-x: 64.5%;
-    --slot-y: 55.6%;
-    --slot-size: clamp(245px, 79vw, 330px);
+    --slot-size: clamp(50px, 79vw, 125px);
   }
 
   .passport-stamp-dock {
@@ -270,7 +268,14 @@
   }
 
   .passport-dragging-stamp {
-    width: clamp(230px, 74vw, 310px);
-    height: clamp(230px, 74vw, 310px);
+    width: clamp(96px, 34vw, 150px);
+    height: clamp(96px, 34vw, 150px);
+  }
+
+  .passport-dragging-stamp-desert,
+  .passport-dragging-stamp-ice,
+  .passport-dragging-stamp-volcano {
+    width: clamp(150px, 46vw, 210px);
+    height: clamp(150px, 46vw, 210px);
   }
 }
