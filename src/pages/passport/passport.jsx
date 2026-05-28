@@ -1,44 +1,189 @@
-import { Lock, Stamp } from 'lucide-react';
-import AppNav from '../../components/app-nav/app-nav';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowLeft, Lock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import quizIslands from '../../data/quiz-questions.json';
 import { getStamps } from '../../utils/game-state';
+import seloTropical from '../../assets/selos/selo-tropical.png';
+import seloDeserto from '../../assets/selos/selo-deserto.png';
+import seloGelo from '../../assets/selos/selo-gelo.png';
+import seloLava from '../../assets/selos/selo-lava.png';
+import passportMobileBg from '../../assets/backgrounds/passaporte-aberto-mobile.png';
+import passportDesktopBg from '../../assets/backgrounds/passaporte-aberto-desktop.png';
+import arrowIcon from '../../assets/icons/icone-seta.svg';
 import './passport.css';
 
+const PASSPORT_PLACED_KEY = 'mapventure_passport_placed_stamps';
+
+const stampImages = {
+  tropical: seloTropical,
+  desert: seloDeserto,
+  ice: seloGelo,
+  volcano: seloLava,
+};
+
+const stampSlots = {
+  tropical: { x: 25.9, y: 33.9 },
+  desert: { x: 37.1, y: 65.9 },
+  ice: { x: 62.6, y: 33.8 },
+  volcano: { x: 73.2, y: 64.8 },
+};
+
+const loadPlacedStamps = () => {
+  try {
+    return JSON.parse(localStorage.getItem(PASSPORT_PLACED_KEY)) || {};
+  } catch {
+    return {};
+  }
+};
+
 export default function PassportPage() {
-  const stamps = getStamps();
-  const stampsSet = new Set(stamps);
+  const navigate = useNavigate();
+  const slotsRef = useRef({});
+  const earnedStamps = useMemo(() => new Set(getStamps()), []);
+  const [placedStamps, setPlacedStamps] = useState(loadPlacedStamps);
+  const [draggingStamp, setDraggingStamp] = useState(null);
+
+  const savePlacedStamps = (nextPlacedStamps) => {
+    setPlacedStamps(nextPlacedStamps);
+    localStorage.setItem(PASSPORT_PLACED_KEY, JSON.stringify(nextPlacedStamps));
+  };
+
+  const startDrag = (event, island, fromSlot = false) => {
+    if (!earnedStamps.has(island.id)) return;
+
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    event.preventDefault();
+    setDraggingStamp({
+      id: island.id,
+      fromSlot,
+      x: event.clientX,
+      y: event.clientY,
+    });
+  };
+
+  useEffect(() => {
+    if (!draggingStamp) return undefined;
+
+    const moveStamp = (event) => {
+      setDraggingStamp((current) => (
+        current ? { ...current, x: event.clientX, y: event.clientY } : current
+      ));
+    };
+
+    const dropStamp = (event) => {
+      const targetSlot = slotsRef.current[draggingStamp.id];
+      const slotRect = targetSlot?.getBoundingClientRect();
+      const hitSlot = slotRect
+        && event.clientX >= slotRect.left
+        && event.clientX <= slotRect.right
+        && event.clientY >= slotRect.top
+        && event.clientY <= slotRect.bottom;
+
+      if (hitSlot) {
+        savePlacedStamps({ ...placedStamps, [draggingStamp.id]: true });
+      }
+
+      setDraggingStamp(null);
+    };
+
+    window.addEventListener('pointermove', moveStamp);
+    window.addEventListener('pointerup', dropStamp);
+    window.addEventListener('pointercancel', dropStamp);
+
+    return () => {
+      window.removeEventListener('pointermove', moveStamp);
+      window.removeEventListener('pointerup', dropStamp);
+      window.removeEventListener('pointercancel', dropStamp);
+    };
+  }, [draggingStamp, placedStamps]);
+
+  const visibleDockStamps = quizIslands.filter((island) => (
+    earnedStamps.has(island.id) && !placedStamps[island.id]
+  ));
+  const lockedDockStamps = quizIslands.filter((island) => !earnedStamps.has(island.id));
+  const draggingIsland = quizIslands.find((island) => island.id === draggingStamp?.id);
 
   return (
-    <div className="passport-screen">
-      <div className="passport-backdrop" />
+    <main className="passport-screen">
+      <div className="passport-art">
+        <picture className="passport-background">
+          <source srcSet={passportDesktopBg} media="(min-width: 768px)" />
+          <img src={passportMobileBg} alt="" />
+        </picture>
 
-      <main className="passport-book">
-        <header className="passport-header">
-          <span>Passaporte</span>
-          <h1>Selos da aventura</h1>
-        </header>
-
-        <section className="passport-stamp-grid" aria-label="Selos conquistados">
+        <section className="passport-drop-layer" aria-label="Passaporte de selos">
           {quizIslands.map((island) => {
-            const isEarned = stampsSet.has(island.id);
+            const slot = stampSlots[island.id];
+            const isPlaced = placedStamps[island.id] && earnedStamps.has(island.id);
+            const isDraggingThis = draggingStamp?.id === island.id;
 
             return (
-              <article
+              <div
                 key={island.id}
-                className={`passport-stamp-card passport-stamp-card-${island.color}${isEarned ? ' is-earned' : ' is-locked'}`}
+                ref={(element) => {
+                  slotsRef.current[island.id] = element;
+                }}
+                className={`passport-stamp-slot passport-stamp-slot-${island.id}`}
+                style={{ '--slot-x': `${slot.x}%`, '--slot-y': `${slot.y}%` }}
               >
-                <div className="passport-stamp-icon">
-                  {isEarned ? <Stamp size={48} strokeWidth={3.2} /> : <Lock size={42} strokeWidth={3.4} />}
-                </div>
-                <h2>{island.stamp}</h2>
-                <p>{isEarned ? island.name : 'Selo bloqueado'}</p>
-              </article>
+                {isPlaced && !isDraggingThis && (
+                  <button
+                    type="button"
+                    className="passport-placed-stamp"
+                    onPointerDown={(event) => startDrag(event, island, true)}
+                    aria-label={`Mover ${island.stamp}`}
+                  >
+                    <img src={stampImages[island.id]} alt={island.stamp} draggable="false" />
+                  </button>
+                )}
+              </div>
             );
           })}
         </section>
-      </main>
+      </div>
 
-      <AppNav />
-    </div>
+      <button
+        type="button"
+        className="passport-back-button"
+        onClick={() => navigate('/home-page')}
+        aria-label="Voltar para home"
+      >
+        <img
+            src={arrowIcon}
+            alt="seta para voltar para home"
+            className="arrow-left"
+        />
+      </button>
+
+      <section className="passport-stamp-dock" aria-label="Selos para colar">
+        {visibleDockStamps.map((island) => (
+          <button
+            key={island.id}
+            type="button"
+            className="passport-dock-stamp"
+            onPointerDown={(event) => startDrag(event, island)}
+            aria-label={`Arrastar ${island.stamp}`}
+          >
+            <img src={stampImages[island.id]} alt={island.stamp} draggable="false" />
+          </button>
+        ))}
+
+        {lockedDockStamps.map((island) => (
+          <div key={island.id} className="passport-dock-stamp is-locked" aria-label={`${island.stamp} bloqueado`}>
+            <Lock size={28} strokeWidth={3.2} />
+          </div>
+        ))}
+      </section>
+
+      {draggingIsland && (
+        <div
+          className="passport-dragging-stamp"
+          style={{ left: draggingStamp.x, top: draggingStamp.y }}
+          aria-hidden="true"
+        >
+          <img src={stampImages[draggingIsland.id]} alt="" draggable="false" />
+        </div>
+      )}
+    </main>
   );
 }

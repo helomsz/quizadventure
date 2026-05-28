@@ -41,12 +41,12 @@ export default function Onboarding() {
     }
   };
 
-  // Pula para o ÚLTIMO passo do onboarding, sem mudar de página
+  // pula para o último passo do onboarding, sem mudar de página
   const handleSkipToLastStep = () => {
     setCurrentStep(steps.length - 1);
   };
 
-  // Navega para a seleção de personagens (Disparado pelo COMEÇAR)
+  // navega para a seleção de personagens
   const handleStartGame = () => {
     navigate('/character-selection');
   };

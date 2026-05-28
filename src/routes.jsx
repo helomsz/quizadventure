@@ -16,6 +16,7 @@ function AppShell() {
   const hideGameTopBar =
     location.pathname === '/' ||
     location.pathname === '/onboarding' ||
+    location.pathname === '/passport' ||
     isInitialCharacterSelection;
 
   return (
