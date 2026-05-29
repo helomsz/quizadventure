@@ -24,26 +24,6 @@ Depois, abra no navegador o endereco exibido no terminal, normalmente:
 http://localhost:5173/
 ```
 
-## Scripts
-
-```bash
-npm run dev
-```
-
-Roda o projeto em modo desenvolvimento.
-
-```bash
-npm run build
-```
-
-Gera a versao final para producao.
-
-```bash
-npm run lint
-```
-
-Executa a verificacao de lint do projeto.
-
 ## Tecnologias
 
 - React
