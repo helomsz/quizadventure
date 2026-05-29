@@ -5,6 +5,7 @@ export const HEART_RECOVERY_KEY = 'mapventure_heart_recovery_at';
 export const STAMPS_KEY = 'mapventure_stamps';
 export const STAMPS_COUNT_KEY = 'mapventure_stamps_count';
 export const PASSPORT_PLACED_KEY = 'mapventure_passport_placed_stamps';
+export const PASSPORT_COMPLETE_KEY = 'mapventure_passport_complete';
 export const COMPLETED_KEY = 'mapventure_completed_challenges';
 export const GAME_STATE_EVENT = 'mapventure-game-state-change';
 
@@ -84,6 +85,7 @@ export const resetGameState = () => {
     STAMPS_KEY,
     STAMPS_COUNT_KEY,
     PASSPORT_PLACED_KEY,
+    PASSPORT_COMPLETE_KEY,
     COMPLETED_KEY,
     'mapventure_character',
   ].forEach((key) => localStorage.removeItem(key));

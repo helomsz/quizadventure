@@ -8,6 +8,7 @@ import MapPage from './pages/map/map';
 import PassportPage from './pages/passport/passport';
 import QuizPage from './pages/quiz/quiz';
 import GameTopBar from './components/game-top-bar/game-top-bar';
+import GameAudioController from './components/game-audio-controller/game-audio-controller';
 
 function AppShell() {
   const location = useLocation();
@@ -22,6 +23,7 @@ function AppShell() {
 
   return (
     <>
+      <GameAudioController />
       {!hideGameTopBar && <GameTopBar />}
       <Routes>
         <Route path="/" element={<SplashScreen />} />

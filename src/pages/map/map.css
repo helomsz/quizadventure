@@ -830,6 +830,111 @@
   gap: 14px;
 }
 
+.map-pause-audio-actions {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 16px;
+}
+
+.map-pause-audio-button {
+  position: relative;
+  min-height: 74px;
+  padding: 8px 10px 10px;
+  border: 5px solid #FFF3D1;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top, #A0DF01 0%, #7CCD00 48%, #3BA102 100%);
+  box-shadow:
+    0 10px 18px rgba(0, 0, 0, 0.24),
+    inset 0 4px 6px rgba(255, 255, 255, 0.35),
+    inset 0 -6px 10px rgba(0, 0, 0, 0.16);
+  color: #fff8e7;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  overflow: hidden;
+  font-family: 'Baloo 2', sans-serif;
+  transition:
+    transform 0.08s ease,
+    filter 0.2s ease;
+}
+
+.map-pause-audio-button::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 14px;
+  right: 14px;
+  height: 34%;
+  border-radius: 999px;
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+.map-pause-audio-button::after {
+  content: "";
+  position: absolute;
+  width: 84%;
+  height: 8px;
+  border-radius: 999px;
+  background: #fff8e7;
+  box-shadow:
+    0 0 0 3px rgba(126, 19, 30, 0.8),
+    0 5px 8px rgba(0, 0, 0, 0.24);
+  opacity: 0;
+  transform: rotate(-34deg) scaleX(0.55);
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease;
+}
+
+.map-pause-audio-button svg,
+.map-pause-audio-button span {
+  position: relative;
+  z-index: 1;
+}
+
+.map-pause-audio-button svg {
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.22));
+}
+
+.map-pause-audio-button span {
+  font-size: clamp(1rem, 3.3vw, 1.26rem);
+  font-weight: 800;
+  line-height: 0.92;
+  text-transform: uppercase;
+  text-shadow:
+    -1px -1px 0 rgba(47, 118, 0, 0.9),
+     1px -1px 0 rgba(47, 118, 0, 0.9),
+    -1px  1px 0 rgba(47, 118, 0, 0.9),
+     1px  1px 0 rgba(47, 118, 0, 0.9),
+     0 3px 0 rgba(31, 98, 0, 0.78);
+}
+
+.map-pause-audio-button.is-off {
+  background:
+    radial-gradient(circle at top, #ff9aaa 0%, #f04c68 50%, #b91f3b 100%);
+}
+
+.map-pause-audio-button.is-off::after {
+  opacity: 1;
+  transform: rotate(-34deg) scaleX(1);
+}
+
+.map-pause-audio-button:hover {
+  filter: brightness(1.05);
+  transform: scale(1.03);
+}
+
+.map-pause-audio-button:active {
+  transform: scale(0.96);
+}
+
 .map-pause-action {
   position: relative;
   min-height: 64px;
@@ -1024,6 +1129,27 @@
 
   .map-pause-actions {
     gap: 14px;
+  }
+
+  .map-pause-audio-actions {
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .map-pause-audio-button {
+    min-height: 66px;
+    border-width: 4px;
+    border-radius: 18px;
+    padding: 7px 8px 9px;
+  }
+
+  .map-pause-audio-button svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .map-pause-audio-button span {
+    font-size: clamp(0.92rem, 4.8vw, 1.14rem);
   }
 
   .map-pause-action {

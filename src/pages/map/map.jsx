@@ -13,7 +13,12 @@ import { useNavigate } from 'react-router-dom';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './map.css';
+import { MusicToggleIcon, SoundToggleIcon } from '../../components/audio-toggle-icons/audio-toggle-icons';
 import quizIslands from '../../data/quiz-questions.json';
+import {
+  isGameSoundEnabled,
+  setGameSoundEnabled,
+} from '../../utils/game-audio';
 import {
   canPlay,
   COMPLETED_KEY,
@@ -110,6 +115,7 @@ export default function MapPage() {
   );
   const [feedback, setFeedback] = useState(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [soundOn, setSoundOn] = useState(isGameSoundEnabled);
 
   const allChallenges = useMemo(
     () => quizIslands.flatMap((island) =>
@@ -193,6 +199,16 @@ export default function MapPage() {
   const replayAdventure = () => {
     resetGameState();
     navigate('/');
+  };
+
+  const toggleSound = () => {
+    const nextSoundOn = !soundOn;
+    setSoundOn(nextSoundOn);
+    setGameSoundEnabled(nextSoundOn);
+  };
+
+  const showMusicNotice = () => {
+    window.alert('Caso a musica estiver incomodando, tire o som do computador.');
   };
 
   return (
@@ -387,6 +403,31 @@ export default function MapPage() {
             </button>
 
             <h2 id="map-pause-title">PAUSE</h2>
+
+            <div className="map-pause-audio-actions" aria-label="Controles de audio">
+              <button
+                type="button"
+                className={`map-pause-audio-button${soundOn ? '' : ' is-off'}`}
+                data-audio-toggle="true"
+                onClick={toggleSound}
+                aria-label={soundOn ? 'Desativar sons' : 'Ativar sons'}
+                aria-pressed={soundOn}
+              >
+                <SoundToggleIcon />
+                <span>Sons</span>
+              </button>
+
+              <button
+                type="button"
+                className="map-pause-audio-button"
+                data-audio-toggle="true"
+                onClick={showMusicNotice}
+                aria-label="Aviso sobre musica"
+              >
+                <MusicToggleIcon />
+                <span>Musica</span>
+              </button>
+            </div>
 
             <div className="map-pause-actions">
               <button

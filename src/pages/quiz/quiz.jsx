@@ -2,13 +2,22 @@ import { useMemo, useRef, useState } from 'react';
 import 'drag-drop-touch';
 import {
   Check,
+  Home,
+  Pause,
+  Play,
   RefreshCw,
   Trophy,
   X,
 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './quiz.css';
+import { MusicToggleIcon, SoundToggleIcon } from '../../components/audio-toggle-icons/audio-toggle-icons';
 import quizIslands from '../../data/quiz-questions.json';
+import {
+  emitGameSound,
+  isGameSoundEnabled,
+  setGameSoundEnabled,
+} from '../../utils/game-audio';
 import {
   canPlay,
   COMPLETED_KEY,
@@ -106,6 +115,8 @@ export default function QuizPage() {
   const [orderItems, setOrderItems] = useState(() => createShuffledOrderItems(activeQuestion));
   const [dragIndex, setDragIndex] = useState(null);
   const [feedback, setFeedback] = useState(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const [soundOn, setSoundOn] = useState(isGameSoundEnabled);
   const touchDragIndexRef = useRef(null);
 
   const choiceOptions = useMemo(() => createShuffledChoices(activeQuestion), [activeQuestion]);
@@ -154,8 +165,19 @@ export default function QuizPage() {
     navigate('/');
   };
 
+  const toggleSound = () => {
+    const nextSoundOn = !soundOn;
+    setSoundOn(nextSoundOn);
+    setGameSoundEnabled(nextSoundOn);
+  };
+
+  const showMusicNotice = () => {
+    window.alert('Caso a musica estiver incomodando, tire o som do computador.');
+  };
+
   const submitAnswer = () => {
     if (!canPlay()) {
+      emitGameSound('wrong');
       setFeedback({
         type: 'wrong',
         title: 'Sem coracoes.',
@@ -172,6 +194,7 @@ export default function QuizPage() {
 
     if (!isCorrect) {
       const nextHearts = loseHeart();
+      emitGameSound('wrong');
       setFeedback({
         type: 'wrong',
         title: nextHearts === 0 ? 'Sem coracoes.' : 'Ops, nao foi dessa vez.',
@@ -189,6 +212,7 @@ export default function QuizPage() {
     const finishedAdventure = allChallenges.every((challenge) => nextCompleted.includes(challenge.id));
 
     if (gotStamp) {
+      emitGameSound(finishedAdventure ? 'complete' : 'stamp');
       setFeedback({
         type: 'stamp',
         title: 'SELO DESBLOQUEADO!',
@@ -200,6 +224,7 @@ export default function QuizPage() {
     }
 
     if (finishedAdventure) {
+      emitGameSound('complete');
       setFeedback({
         type: 'complete',
         title: 'VOCÊ CONSEGUIU!!!',
@@ -209,6 +234,7 @@ export default function QuizPage() {
       return;
     }
 
+    emitGameSound('right');
     setFeedback({
       type: 'right',
       title: gotStamp ? `Voce ganhou o ${activeQuestion.island.stamp}!` : 'Resposta certa!',
@@ -263,6 +289,15 @@ export default function QuizPage() {
   return (
     <div className={`quiz-screen quiz-screen-${activeQuestion.island.id}`}>
       <div className="quiz-scenery" />
+
+      <button
+        type="button"
+        className="quiz-pause-button"
+        onClick={() => setIsPaused(true)}
+        aria-label="Pausar"
+      >
+        <Pause size={28} strokeWidth={4.4} fill="currentColor" />
+      </button>
 
       <section className="quiz-modal" role="dialog" aria-modal="true">
         <button
@@ -366,6 +401,73 @@ export default function QuizPage() {
           </button>
         </div>
       </section>
+
+      {isPaused && (
+        <div className="quiz-pause-overlay" role="presentation">
+          <section
+            className="quiz-pause-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="quiz-pause-title"
+          >
+            <button
+              type="button"
+              className="quiz-pause-close"
+              onClick={() => setIsPaused(false)}
+              aria-label="Fechar pausa"
+            >
+              <X size={34} strokeWidth={4.2} />
+            </button>
+
+            <h2 id="quiz-pause-title">PAUSE</h2>
+
+            <div className="quiz-pause-audio-actions" aria-label="Controles de audio">
+              <button
+                type="button"
+                className={`quiz-pause-audio-button${soundOn ? '' : ' is-off'}`}
+                data-audio-toggle="true"
+                onClick={toggleSound}
+                aria-label={soundOn ? 'Desativar sons' : 'Ativar sons'}
+                aria-pressed={soundOn}
+              >
+                <SoundToggleIcon />
+                <span>Sons</span>
+              </button>
+
+              <button
+                type="button"
+                className="quiz-pause-audio-button"
+                data-audio-toggle="true"
+                onClick={showMusicNotice}
+                aria-label="Aviso sobre musica"
+              >
+                <MusicToggleIcon />
+                <span>Musica</span>
+              </button>
+            </div>
+
+            <div className="quiz-pause-actions">
+              <button
+                type="button"
+                className="quiz-pause-action quiz-pause-action-green"
+                onClick={() => setIsPaused(false)}
+              >
+                <Play size={42} strokeWidth={4.2} fill="currentColor" />
+                <span>Continuar</span>
+              </button>
+
+              <button
+                type="button"
+                className="quiz-pause-action quiz-pause-action-blue"
+                onClick={() => navigate('/map')}
+              >
+                <Home size={42} strokeWidth={4.2} />
+                <span>Mapa</span>
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
 
       {feedback && (
         <div className="quiz-result-overlay" role="presentation">

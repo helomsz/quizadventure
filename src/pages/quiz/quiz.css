@@ -615,6 +615,119 @@
   gap: 18px;
 }
 
+.quiz-pause-audio-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0 0 22px;
+}
+
+.quiz-pause-audio-button {
+  position: relative;
+  min-height: 86px;
+  padding: 10px 12px 12px;
+  border: 5px solid #2a8522;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at top, #baff42 0%, #83d927 48%, #48a70d 100%);
+  box-shadow:
+    0 8px 0 #216c1b,
+    0 14px 18px rgba(0, 0, 0, 0.22),
+    inset 0 4px 6px rgba(255, 255, 255, 0.35),
+    inset 0 -7px 10px rgba(0, 0, 0, 0.18);
+  color: #fff8e7;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  gap: 4px;
+  overflow: hidden;
+  font-family: 'Baloo 2', sans-serif;
+  transition:
+    transform 0.08s ease,
+    filter 0.2s ease;
+}
+
+.quiz-pause-audio-button::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 14px;
+  right: 14px;
+  height: 34%;
+  border-radius: 999px;
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+.quiz-pause-audio-button::after {
+  content: "";
+  position: absolute;
+  width: 84%;
+  height: 8px;
+  border-radius: 999px;
+  background: #fff8e7;
+  box-shadow:
+    0 0 0 3px rgba(126, 19, 30, 0.8),
+    0 5px 8px rgba(0, 0, 0, 0.24);
+  opacity: 0;
+  transform: rotate(-34deg) scaleX(0.55);
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease;
+}
+
+.quiz-pause-audio-button svg,
+.quiz-pause-audio-button span {
+  position: relative;
+  z-index: 1;
+}
+
+.quiz-pause-audio-button svg {
+  filter:
+    drop-shadow(-2px -2px 0 rgba(86, 48, 20, 0.78))
+    drop-shadow(2px 2px 0 rgba(86, 48, 20, 0.78))
+    drop-shadow(0 4px 4px rgba(0, 0, 0, 0.22));
+}
+
+.quiz-pause-audio-button span {
+  font-size: clamp(1.05rem, 3vw, 1.38rem);
+  font-weight: 800;
+  line-height: 0.92;
+  text-transform: uppercase;
+  text-shadow:
+    -2px -2px 0 #6b3b14,
+     2px -2px 0 #6b3b14,
+    -2px  2px 0 #6b3b14,
+     2px  2px 0 #6b3b14,
+     0 4px 0 rgba(72, 40, 16, 0.72);
+}
+
+.quiz-pause-audio-button.is-off {
+  border-color: #9a1e2f;
+  background:
+    radial-gradient(circle at top, #ff9aaa 0%, #f04c68 50%, #b91f3b 100%);
+  box-shadow:
+    0 8px 0 #7c1729,
+    0 14px 18px rgba(0, 0, 0, 0.26),
+    inset 0 4px 6px rgba(255, 255, 255, 0.35),
+    inset 0 -7px 10px rgba(0, 0, 0, 0.2);
+}
+
+.quiz-pause-audio-button.is-off::after {
+  opacity: 1;
+  transform: rotate(-34deg) scaleX(1);
+}
+
+.quiz-pause-audio-button:hover {
+  filter: brightness(1.05);
+  transform: scale(1.03);
+}
+
+.quiz-pause-audio-button:active {
+  transform: scale(0.96);
+}
+
 .quiz-pause-action {
   position: relative;
   min-height: 72px;
@@ -1484,6 +1597,27 @@
 
   .quiz-pause-actions {
     gap: 14px;
+  }
+
+  .quiz-pause-audio-actions {
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .quiz-pause-audio-button {
+    min-height: 72px;
+    border-width: 4px;
+    border-radius: 18px;
+    padding: 8px 8px 10px;
+  }
+
+  .quiz-pause-audio-button svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .quiz-pause-audio-button span {
+    font-size: clamp(0.92rem, 4.8vw, 1.18rem);
   }
 
   .quiz-pause-action {

@@ -1,13 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import quizIslands from '../../data/quiz-questions.json';
-import { getStamps, PASSPORT_PLACED_KEY } from '../../utils/game-state';
+import { emitGameSound } from '../../utils/game-audio';
+import { getStamps, PASSPORT_COMPLETE_KEY, PASSPORT_PLACED_KEY } from '../../utils/game-state';
 import seloTropical from '../../assets/selos/selo-tropical.png';
 import seloDeserto from '../../assets/selos/selo-deserto.png';
 import seloGelo from '../../assets/selos/selo-gelo.png';
 import seloLava from '../../assets/selos/selo-lava.png';
 import passportMobileBg from '../../assets/backgrounds/passaporte-aberto-mobile.png';
 import passportDesktopBg from '../../assets/backgrounds/passaporte-aberto-desktop.png';
+import passportCompleteVideo from '../../assets/videos-passaporte/video-passaporte.mp4';
+import passportCompleteVideoMobile from '../../assets/videos-passaporte/video-passaporte-mobile.mp4';
+import passportClosedImage from '../../assets/videos-passaporte/passaporte-fechado.png';
+import passportClosedImageMobile from '../../assets/videos-passaporte/passaporte-fechado-mobile.png';
 import arrowIcon from '../../assets/icons/icone-seta.svg';
 import lockIcon from '../../assets/icons/cadeado.svg';
 import './passport.css';
@@ -54,6 +59,9 @@ export default function PassportPage() {
   const earnedStamps = useMemo(() => new Set(getStamps()), []);
   const [placedStamps, setPlacedStamps] = useState(loadPlacedStamps);
   const [draggingStamp, setDraggingStamp] = useState(null);
+  const [completionStage, setCompletionStage] = useState(() => (
+    localStorage.getItem(PASSPORT_COMPLETE_KEY) === 'true' ? 'complete' : 'idle'
+  ));
   const stampSlots = isMobile ? mobileStampSlots : desktopStampSlots;
 
   useEffect(() => {
@@ -73,6 +81,11 @@ export default function PassportPage() {
   const savePlacedStamps = (nextPlacedStamps) => {
     setPlacedStamps(nextPlacedStamps);
     localStorage.setItem(PASSPORT_PLACED_KEY, JSON.stringify(nextPlacedStamps));
+  };
+
+  const finishPassport = () => {
+    localStorage.setItem(PASSPORT_COMPLETE_KEY, 'true');
+    setCompletionStage('complete');
   };
 
   const startDrag = (event, island, fromSlot = false) => {
@@ -107,10 +120,20 @@ export default function PassportPage() {
         && event.clientY <= slotRect.bottom;
 
       if (hitSlot) {
-        savePlacedStamps({
+        const nextPlacedStamps = {
           ...placedStamps,
           [draggingStamp.id]: { placedAt: Date.now() },
-        });
+        };
+        const completedPassport = quizIslands.every((island) => (
+          earnedStamps.has(island.id) && nextPlacedStamps[island.id]
+        ));
+
+        savePlacedStamps(nextPlacedStamps);
+
+        if (completedPassport && completionStage === 'idle') {
+          emitGameSound('complete');
+          setCompletionStage('video');
+        }
       }
 
       setDraggingStamp(null);
@@ -125,7 +148,7 @@ export default function PassportPage() {
       window.removeEventListener('pointerup', dropStamp);
       window.removeEventListener('pointercancel', dropStamp);
     };
-  }, [draggingStamp, placedStamps]);
+  }, [completionStage, draggingStamp, earnedStamps, placedStamps]);
 
   const visibleDockStamps = quizIslands.filter((island) => (
     earnedStamps.has(island.id) && !placedStamps[island.id]
@@ -212,6 +235,28 @@ export default function PassportPage() {
           aria-hidden="true"
         >
           <img src={stampImages[draggingIsland.id]} alt="" draggable="false" />
+        </div>
+      )}
+
+      {completionStage !== 'idle' && (
+        <div className="passport-complete-scene" aria-live="polite">
+          {completionStage === 'video' ? (
+            <video
+              className="passport-complete-media"
+              autoPlay
+              muted
+              playsInline
+              onEnded={finishPassport}
+            >
+              <source src={passportCompleteVideoMobile} media="(max-width: 767px)" type="video/mp4" />
+              <source src={passportCompleteVideo} type="video/mp4" />
+            </video>
+          ) : (
+            <picture className="passport-complete-picture">
+              <source srcSet={passportClosedImage} media="(min-width: 768px)" />
+              <img src={passportClosedImageMobile} alt="Passaporte completo" />
+            </picture>
+          )}
         </div>
       )}
     </main>
