@@ -1,16 +1,62 @@
-# React + Vite
+# Quiz Adventure
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Quiz Adventure e um jogo educativo feito em React + Vite, com mapa interativo, fases de perguntas, coleta de selos, inventario e passaporte.
 
-Currently, two official plugins are available:
+O projeto foi desenvolvido com layout responsivo para **desktop** e **mobile**, adaptando telas, imagens, videos e controles para diferentes tamanhos de dispositivo.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Como Rodar
 
-## React Compiler
+Instale as dependencias:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+```
 
-## Expanding the ESLint configuration
+Inicie o servidor de desenvolvimento:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm run dev
+```
+
+Depois, abra no navegador o endereco exibido no terminal, normalmente:
+
+```bash
+http://localhost:5173/
+```
+
+## Scripts
+
+```bash
+npm run dev
+```
+
+Roda o projeto em modo desenvolvimento.
+
+```bash
+npm run build
+```
+
+Gera a versao final para producao.
+
+```bash
+npm run lint
+```
+
+Executa a verificacao de lint do projeto.
+
+## Tecnologias
+
+- React
+- Vite
+- React Router
+- Leaflet / React Leaflet
+- CSS responsivo
+
+## Responsividade
+
+O jogo possui suporte para:
+
+- Desktop
+- Mobile
+- Imagens e videos adaptados por tamanho de tela
+- Controles ajustados para mouse e toque
