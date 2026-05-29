@@ -2,21 +2,15 @@ import { useMemo, useRef, useState } from 'react';
 import 'drag-drop-touch';
 import {
   Check,
-  Home,
-  Pause,
-  Play,
   RefreshCw,
   Trophy,
   X,
 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './quiz.css';
-import { MusicToggleIcon, SoundToggleIcon } from '../../components/audio-toggle-icons/audio-toggle-icons';
 import quizIslands from '../../data/quiz-questions.json';
 import {
   emitGameSound,
-  isGameSoundEnabled,
-  setGameSoundEnabled,
 } from '../../utils/game-audio';
 import {
   canPlay,
@@ -52,6 +46,7 @@ const stampImages = {
   volcano: seloLava,
 };
 
+// compara listas de respostas ordenadas
 const sameOrder = (current, answer) =>
   current.length === answer.length && current.every((item, index) => item === answer[index]);
 
@@ -64,6 +59,7 @@ const reorderItems = (items, fromIndex, toIndex) => {
   return next;
 };
 
+// embaralha opções sem alterar a origem
 const shuffleItems = (items) => {
   const shuffled = [...items];
 
@@ -75,6 +71,7 @@ const shuffleItems = (items) => {
   return shuffled;
 };
 
+// prepara alternativas para a pergunta atual
 const createShuffledChoices = (question) => {
   if (!question?.options) return [];
 
@@ -115,8 +112,6 @@ export default function QuizPage() {
   const [orderItems, setOrderItems] = useState(() => createShuffledOrderItems(activeQuestion));
   const [dragIndex, setDragIndex] = useState(null);
   const [feedback, setFeedback] = useState(null);
-  const [isPaused, setIsPaused] = useState(false);
-  const [soundOn, setSoundOn] = useState(isGameSoundEnabled);
   const touchDragIndexRef = useRef(null);
 
   const choiceOptions = useMemo(() => createShuffledChoices(activeQuestion), [activeQuestion]);
@@ -127,7 +122,7 @@ export default function QuizPage() {
     return (
       <div className="quiz-screen quiz-screen-tropical">
         <section className="quiz-modal">
-          <h1>Fase nao encontrada</h1>
+          <h1>Fase não encontrada</h1>
           <button type="button" className="quiz-primary-button" onClick={() => navigate('/map')}>
             Voltar ao mapa
           </button>
@@ -165,23 +160,14 @@ export default function QuizPage() {
     navigate('/');
   };
 
-  const toggleSound = () => {
-    const nextSoundOn = !soundOn;
-    setSoundOn(nextSoundOn);
-    setGameSoundEnabled(nextSoundOn);
-  };
-
-  const showMusicNotice = () => {
-    window.alert('Caso a musica estiver incomodando, tire o som do computador.');
-  };
-
+  // valida resposta e monta o feedback
   const submitAnswer = () => {
     if (!canPlay()) {
       emitGameSound('wrong');
       setFeedback({
         type: 'wrong',
-        title: 'Sem coracoes.',
-        message: 'Aguarde a recuperacao dos coracoes para jogar novamente.',
+        title: 'Sem corações.',
+        message: 'Aguarde a recuperação dos corações para jogar novamente.',
         action: 'Voltar ao mapa',
         next: 'map',
       });
@@ -197,10 +183,10 @@ export default function QuizPage() {
       emitGameSound('wrong');
       setFeedback({
         type: 'wrong',
-        title: nextHearts === 0 ? 'Sem coracoes.' : 'Ops, nao foi dessa vez.',
+        title: nextHearts === 0 ? 'Sem corações.' : 'Ops, não foi dessa vez.',
         message: nextHearts === 0
-          ? 'Voce perdeu todos os coracoes. Eles voltam em 5 minutos.'
-          : 'Voce perdeu um coracao. Tente de novo com calma.',
+          ? 'Você perdeu todos os corações. Eles voltam em 5 minutos.'
+          : 'Você perdeu um coração. Tente de novo com calma.',
         action: nextHearts === 0 ? 'Voltar ao mapa' : 'Tentar de novo',
         next: nextHearts === 0 ? 'map' : 'retry',
       });
@@ -237,7 +223,7 @@ export default function QuizPage() {
     emitGameSound('right');
     setFeedback({
       type: 'right',
-      title: gotStamp ? `Voce ganhou o ${activeQuestion.island.stamp}!` : 'Resposta certa!',
+      title: gotStamp ? `Você ganhou o ${activeQuestion.island.stamp}!` : 'Resposta certa!',
       message: gotStamp ? activeQuestion.island.completionHint : activeQuestion.hint,
       action: 'Continuar',
       next: 'map',
@@ -258,6 +244,7 @@ export default function QuizPage() {
     setDragIndex(toIndex);
   };
 
+  // suporte de toque para perguntas de ordenar
   const handleOrderPointerDown = (event, index) => {
     if (event.pointerType === 'mouse') return;
 
@@ -290,16 +277,8 @@ export default function QuizPage() {
     <div className={`quiz-screen quiz-screen-${activeQuestion.island.id}`}>
       <div className="quiz-scenery" />
 
-      <button
-        type="button"
-        className="quiz-pause-button"
-        onClick={() => setIsPaused(true)}
-        aria-label="Pausar"
-      >
-        <Pause size={28} strokeWidth={4.4} fill="currentColor" />
-      </button>
-
       <section className="quiz-modal" role="dialog" aria-modal="true">
+        {/* fechar */}
         <button
           type="button"
           className="quiz-close-button"
@@ -309,6 +288,7 @@ export default function QuizPage() {
           <X size={22} strokeWidth={4} />
         </button>
 
+        {/* cabeçalho */}
         <header className="quiz-header">
           <div className={`quiz-island-icon quiz-island-icon-${activeQuestion.island.color}`}>
             <img
@@ -330,11 +310,13 @@ export default function QuizPage() {
           <span style={{ width: `${(activeQuestion.number / 20) * 100}%` }} />
         </div>
 
+        {/* pergunta */}
         <div className="quiz-question-card">
-          <p>Nivel {activeQuestion.island.level}</p>
+          <p>Nível {activeQuestion.island.level}</p>
           <h2>{activeQuestion.question}</h2>
         </div>
 
+        {/* respostas */}
         {activeQuestion.type === 'choice' ? (
           <div className="quiz-answer-grid">
             {choiceOptions.map((option, index) => (
@@ -387,6 +369,7 @@ export default function QuizPage() {
           </div>
         )}
 
+        {/* ações */}
         <div className="quiz-actions">
           <button type="button" className="quiz-secondary-button" onClick={() => navigate('/map')}>
             Voltar
@@ -402,74 +385,8 @@ export default function QuizPage() {
         </div>
       </section>
 
-      {isPaused && (
-        <div className="quiz-pause-overlay" role="presentation">
-          <section
-            className="quiz-pause-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="quiz-pause-title"
-          >
-            <button
-              type="button"
-              className="quiz-pause-close"
-              onClick={() => setIsPaused(false)}
-              aria-label="Fechar pausa"
-            >
-              <X size={34} strokeWidth={4.2} />
-            </button>
-
-            <h2 id="quiz-pause-title">PAUSE</h2>
-
-            <div className="quiz-pause-audio-actions" aria-label="Controles de audio">
-              <button
-                type="button"
-                className={`quiz-pause-audio-button${soundOn ? '' : ' is-off'}`}
-                data-audio-toggle="true"
-                onClick={toggleSound}
-                aria-label={soundOn ? 'Desativar sons' : 'Ativar sons'}
-                aria-pressed={soundOn}
-              >
-                <SoundToggleIcon />
-                <span>Sons</span>
-              </button>
-
-              <button
-                type="button"
-                className="quiz-pause-audio-button"
-                data-audio-toggle="true"
-                onClick={showMusicNotice}
-                aria-label="Aviso sobre musica"
-              >
-                <MusicToggleIcon />
-                <span>Musica</span>
-              </button>
-            </div>
-
-            <div className="quiz-pause-actions">
-              <button
-                type="button"
-                className="quiz-pause-action quiz-pause-action-green"
-                onClick={() => setIsPaused(false)}
-              >
-                <Play size={42} strokeWidth={4.2} fill="currentColor" />
-                <span>Continuar</span>
-              </button>
-
-              <button
-                type="button"
-                className="quiz-pause-action quiz-pause-action-blue"
-                onClick={() => navigate('/map')}
-              >
-                <Home size={42} strokeWidth={4.2} />
-                <span>Mapa</span>
-              </button>
-            </div>
-          </section>
-        </div>
-      )}
-
       {feedback && (
+        /* resultado */
         <div className="quiz-result-overlay" role="presentation">
           {(feedback.type === 'complete' || feedback.type === 'stamp') && (
             <div className="quiz-confetti" aria-hidden="true">

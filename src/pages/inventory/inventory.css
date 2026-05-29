@@ -1,5 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap');
+
+/* ======================================================
+   estrutura do inventário
+====================================================== */
 
 .inventory-screen {
   position: fixed;
@@ -12,6 +16,10 @@
   background: url('../../assets/backgrounds/fundo-inventário.png') center / cover no-repeat;
   user-select: none;
 }
+
+/* ======================================================
+   botão voltar
+====================================================== */
 
 .inventory-back-button {
   position: absolute;
@@ -71,12 +79,20 @@
   transform: rotate(180deg);
 }
 
+/* ======================================================
+   conteúdo
+====================================================== */
+
 .inventory-content {
   width: min(1280px, 86vw);
   margin: 0 auto;
   display: grid;
   justify-items: center;
 }
+
+/* ======================================================
+   cabeçalho
+====================================================== */
 
 .inventory-header {
   margin: 2px 0 24px;
@@ -114,12 +130,20 @@
      0 10px 16px rgba(0, 0, 0, 0.25);
 }
 
+/* ======================================================
+   grade de ilhas
+====================================================== */
+
 .inventory-island-grid {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(28px, 3.4vw, 46px) clamp(44px, 5.2vw, 72px);
 }
+
+/* ======================================================
+   cards das ilhas
+====================================================== */
 
 .inventory-island-card {
   --island-title: #a9ff28;
@@ -231,6 +255,10 @@
   background: rgba(0, 0, 0, 0.58);
 }
 
+/* ======================================================
+   estado bloqueado
+====================================================== */
+
 .inventory-lock-icon {
   position: absolute;
   inset: 50% auto auto 50%;
@@ -244,6 +272,10 @@
     drop-shadow(0 10px 12px rgba(0, 0, 0, 0.34));
   transform: translate(-50%, -50%);
 }
+
+/* ======================================================
+   texto dos cards
+====================================================== */
 
 .inventory-island-copy {
   position: absolute;
@@ -282,6 +314,10 @@
     0 2px 2px rgba(0, 0, 0, 0.75),
     0 4px 10px rgba(0, 0, 0, 0.44);
 }
+
+/* ======================================================
+   progresso
+====================================================== */
 
 .inventory-progress-row {
   display: grid;
@@ -322,6 +358,10 @@
     0 2px 2px rgba(0, 0, 0, 0.74),
     0 4px 8px rgba(0, 0, 0, 0.36);
 }
+
+/* ======================================================
+   responsividade
+====================================================== */
 
 @media (min-width: 768px) and (max-width: 1180px) {
   .inventory-content {

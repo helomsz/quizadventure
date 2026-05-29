@@ -37,6 +37,7 @@ const homeBackgrounds = {
   },
 };
 
+// encontra a ilha atual pelo progresso
 const getCurrentIslandId = () => {
   const completed = loadJson(COMPLETED_KEY, []);
   const completedSet = new Set(completed);
@@ -58,6 +59,7 @@ export default function HomePage() {
     luna: lunaImg,
   };
 
+  // carrega personagem salvo e sincroniza a ilha atual
   useEffect(() => {
     const savedCharacter = localStorage.getItem('mapventure_character');
     if (savedCharacter) {
@@ -82,11 +84,14 @@ export default function HomePage() {
 
   return (
     <div className="home-container">
+      {/* background */}
       <img src={background.mobile} alt="" className="home-bg home-bg-mobile" />
       <img src={background.desktop} alt="" className="home-bg home-bg-desktop" />
 
+      {/* overlay */}
       <div className="home-overlay" />
 
+      {/* personagem */}
       <main className="home-character-stage">
         <img
           src={characterImages[selectedCharacter] || heloImg}
@@ -96,6 +101,7 @@ export default function HomePage() {
         />
       </main>
 
+      {/* navegação */}
       <AppNav />
     </div>
   );

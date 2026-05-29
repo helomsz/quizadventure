@@ -24,6 +24,7 @@ export default function GameTopBar() {
   const [stamps, setStamps] = useState(() => getStamps());
   const [recoveryLeft, setRecoveryLeft] = useState(() => Math.max(0, getRecoveryAt() - Date.now()));
 
+  // sincroniza corações, selos e tempo de recuperação
   useEffect(() => {
     const sync = () => {
       setHearts(getHearts());
@@ -46,6 +47,7 @@ export default function GameTopBar() {
 
   return (
     <div className="game-top-bar">
+      {/* corações */}
       <div className="game-hearts-tag" aria-label={`${hearts} coracoes`}>
         {Array.from({ length: MAX_HEARTS }, (_, index) => (
           <img
@@ -60,6 +62,7 @@ export default function GameTopBar() {
         )}
       </div>
 
+      {/* selos */}
       <div className="game-stamps-tag" aria-label={`${stamps.length} selos`}>
         <img src={stampIcon} alt="" className="game-stamp-img" />
         <span>{stamps.length} SELOS</span>

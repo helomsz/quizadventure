@@ -6,6 +6,7 @@ import {
 } from '../../utils/game-audio';
 
 export default function GameAudioController() {
+  // libera áudio no primeiro gesto do jogador
   useEffect(() => {
     const unlockAndStartMusic = (event) => {
       if (event.target?.closest?.('[data-audio-toggle="true"]')) return;

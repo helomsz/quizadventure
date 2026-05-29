@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap');
 
 * {
@@ -7,6 +7,10 @@
   box-sizing: border-box;
 }
 
+/* ======================================================
+   estrutura do onboarding
+====================================================== */
+
 .onboarding-container {
   position: fixed;
   inset: 0;
@@ -14,9 +18,10 @@
   font-family: 'Fredoka', sans-serif;
 }
 
-/* =========================
-   BACKGROUND
-========================= */
+
+/* ======================================================
+   fundos
+====================================================== */
 
 .ob-bg {
   position: absolute;
@@ -46,9 +51,10 @@
   }
 }
 
-/* =========================
-   OVERLAY
-========================= */
+
+/* ======================================================
+   overlay de escurecimento
+====================================================== */
 
 .onboarding-overlay {
   position: absolute;
@@ -66,9 +72,10 @@
   );
 }
 
-/* =========================
-   CONTENT
-========================= */
+
+/* ======================================================
+   conteúdo
+====================================================== */
 
 .onboarding-content {
   position: relative;
@@ -79,9 +86,10 @@
   z-index: 5;
 }
 
-/* =========================
-   SKIP
-========================= */
+
+/* ======================================================
+   botão pular
+====================================================== */
 
 .btn-skip {
   position: fixed;
@@ -148,9 +156,10 @@
   transform: scale(1.04);
 }
 
-/* =========================
-   BALÃO
-========================= */
+
+/* ======================================================
+   balão de fala
+====================================================== */
 
 .speech-bubble-container {
   position: absolute;
@@ -180,9 +189,10 @@
   font-weight: 800;
 }
 
-/* =========================
-   PERSONAGEM
-========================= */
+
+/* ======================================================
+   personagem
+====================================================== */
 
 .character-container {
   position: absolute;
@@ -203,9 +213,10 @@
   transition: all .3s ease;
 }
 
-/* =========================
-   DOTS
-========================= */
+
+/* ======================================================
+   indicadores
+====================================================== */
 
 .dots-container {
   position: fixed;
@@ -265,9 +276,10 @@
   background: rgba(255,255,255,0.7);
 }
 
-/* =========================
-   NEXT BUTTON
-========================= */
+
+/* ======================================================
+   botão avançar
+====================================================== */
 
 .btn-next {
   position: fixed;
@@ -338,9 +350,10 @@
   transition: all .2s ease;
 }
 
-/* =========================
-   START BUTTON
-========================= */
+
+/* ======================================================
+   botão iniciar
+====================================================== */
 
 .btn-start {
   position: fixed;
@@ -355,8 +368,7 @@
   border: 6px solid #FFF3D1;
   border-radius: 999px;
 
-  /* GRADIENTE MAIS FECHADO E MENOS ESTOURADO */
-  background:
+    background:
     linear-gradient(
       to bottom,
       #FFA900 0%,
@@ -385,7 +397,6 @@
     filter .2s ease;
 }
 
-/* GLOSSY MAIS CONTROLADO */
 .btn-start::before {
   content: "";
   position: absolute;
@@ -408,7 +419,6 @@
   pointer-events: none;
 }
 
-/* TEXTO GAMIFICADO */
 .btn-start {
   font-family: 'Baloo 2', sans-serif;
 
@@ -420,8 +430,7 @@
 
   color: #FFF8E7;
 
-  /* BORDA FALSA MAIS BONITA */
-  text-shadow:
+    text-shadow:
     -2px -2px 0 #8A3A00,
      2px -2px 0 #8A3A00,
     -2px  2px 0 #8A3A00,
@@ -430,7 +439,6 @@
      0 3px 0 #6E2D00,
      0 5px 8px rgba(0,0,0,0.35);
 }
-/* HOVER */
 .btn-start:hover {
   filter: brightness(1.04);
 
@@ -439,7 +447,6 @@
     scale(1.04);
 }
 
-/* CLICK */
 .btn-start:active {
   transform:
     translateX(-50%)
@@ -450,9 +457,10 @@
     inset 0 2px 6px rgba(0,0,0,0.35);
 }
 
-/* =========================
-   MOBILE  
-========================= */
+
+/* ======================================================
+   responsividade
+====================================================== */
 
 @media (max-width: 768px) {
   .speech-bubble-container {
@@ -473,10 +481,6 @@
   }
 }
 
-/* =========================
-   TABLET  ← CORREÇÕES NOVAS
-   Faixa: 768px – 1199px
-========================= */
 
 @media (min-width: 768px) and (max-width: 1199px) {
   .speech-bubble-container {
@@ -535,9 +539,6 @@
   }
 }
 
-/* =========================
-   TELAS CURTAS (sem alteração)
-========================= */
 
 @media (max-height: 740px) {
   .character-img {
@@ -568,6 +569,10 @@
 }
 
 
+
+/* ======================================================
+   variações
+====================================================== */
 
 .speech-bubble-img.small {
   width: 80%;

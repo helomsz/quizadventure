@@ -11,12 +11,14 @@ export default function CharacterCarousel({
   onConfirm,
 }) {
 
+  // volta no carrossel de personagens
   const handlePrev = () => {
     setCurrentIndex((prev) =>
       prev === 0 ? CHARACTERS.length - 1 : prev - 1
     );
   };
 
+  // avança no carrossel de personagens
   const handleNext = () => {
     setCurrentIndex((prev) =>
       prev === CHARACTERS.length - 1 ? 0 : prev + 1
@@ -30,7 +32,7 @@ export default function CharacterCarousel({
 
       <div className="sel-carousel-row">
 
-        {/* ESQUERDA */}
+        {/* esquerda */}
         <button
           onClick={handlePrev}
           className="sel-arrow-btn"
@@ -43,7 +45,7 @@ export default function CharacterCarousel({
           />
         </button>
 
-        {/* PERSONAGEM */}
+        {/* personagem */}
         <div className="sel-character-display">
           <img
             key={currentCharacter.id}
@@ -53,7 +55,7 @@ export default function CharacterCarousel({
           />
         </div>
 
-        {/* DIREITA */}
+        {/* direita */}
         <button
           onClick={handleNext}
           className="sel-arrow-btn"
@@ -67,7 +69,7 @@ export default function CharacterCarousel({
         </button>
       </div>
 
-      {/* NOME + CONFIRMAR */}
+      {/* nome + confirmar */}
       <div className="sel-bottom-row">
 
         <div className="sel-name-plate">

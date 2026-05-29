@@ -18,6 +18,7 @@ export default function SplashScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [soundOn, setSoundOn] = useState(isGameSoundEnabled);
 
+  // alterna os efeitos sonoros do jogo
   const toggleSound = () => {
     const nextSoundOn = !soundOn;
     setSoundOn(nextSoundOn);
@@ -28,7 +29,7 @@ export default function SplashScreen() {
     window.alert('Caso a musica estiver incomodando, tire o som do computador.');
   };
 
-  // Simulador do carregamento da barra
+  // simulador do carregamento da barra
   useEffect(() => {
     if (progress < 100) {
       const timer = setTimeout(() => {
@@ -44,19 +45,23 @@ export default function SplashScreen() {
     <div className="splash-container">
       
 
+      {/* background */}
       <img src={bgMobile} alt="Background Mobile" className="bg-image bg-mobile" />
       <img src={bgDesktop} alt="Background Desktop" className="bg-image bg-desktop" />
 
       <div className="interface-wrapper">
 
+        {/* logo */}
         <div className="logo-container">
           <img src={logoImg} alt="Quiz Adventure Logo" className="logo-img" />
         </div>
 
 
+        {/* controles */}
         <div className="controls-container">
           
           {isLoading ? (
+            /* carregamento */
             <div className="loading-bar-container">
               <div className="loading-bar-track">
                 <div 
@@ -67,6 +72,7 @@ export default function SplashScreen() {
             </div>
           ) : (
 
+            /* botões */
             <div className="buttons-group">
     
               <button className="btn-play" onClick={() => navigate('/onboarding')}>

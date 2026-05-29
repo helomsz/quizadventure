@@ -39,6 +39,7 @@ export default function AppNav({ floating = false }) {
     return () => mq.removeEventListener('change', update);
   }, []);
 
+  // navegação circular no carrossel mobile
   const scrollNav = (direction) => {
     const scrollEl = scrollRef.current;
     if (!scrollEl) return;
@@ -61,6 +62,7 @@ export default function AppNav({ floating = false }) {
     });
   };
 
+  // arraste horizontal no mobile
   const onMouseDown = (event) => {
     if (!scrollRef.current) return;
 
@@ -85,6 +87,7 @@ export default function AppNav({ floating = false }) {
 
   return (
     <nav className={`app-nav-bar${floating ? ' app-nav-bar-floating' : ''}`}>
+      {/* seta esquerda */}
       <button
         type="button"
         className="app-nav-arrow app-nav-arrow-left"
@@ -94,6 +97,7 @@ export default function AppNav({ floating = false }) {
         <ChevronLeft size={28} strokeWidth={4} />
       </button>
 
+      {/* itens */}
       <div
         className="app-nav-scroll"
         ref={scrollRef}
@@ -115,6 +119,7 @@ export default function AppNav({ floating = false }) {
         ))}
       </div>
 
+      {/* seta direita */}
       <button
         type="button"
         className="app-nav-arrow app-nav-arrow-right"

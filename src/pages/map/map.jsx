@@ -1,19 +1,14 @@
-import { useEffect, useMemo, useState } from 'react';
-import {
-  Check,
-  Lock,
-  Play,
-  X,
-  Plus,
-  Minus,
-} from 'lucide-react';
+﻿import { useMemo, useState } from 'react';
+import { Check } from 'lucide-react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { MapContainer, ImageOverlay, Marker, useMap } from 'react-leaflet';
+import { ImageOverlay, MapContainer, Marker } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './map.css';
-import { MusicToggleIcon, SoundToggleIcon } from '../../components/audio-toggle-icons/audio-toggle-icons';
+import MapIslandCard from '../../components/map/map-island-card';
+import MapPauseModal from '../../components/map/map-pause-modal';
+import { MapFocus, MapZoomControls } from '../../components/map/map-controls';
 import quizIslands from '../../data/quiz-questions.json';
 import {
   isGameSoundEnabled,
@@ -51,11 +46,13 @@ const firstChallenge = withIsland(firstIsland, firstIsland.challenges[0]);
 const lastIsland = quizIslands[quizIslands.length - 1];
 const lastChallenge = withIsland(lastIsland, lastIsland.challenges[lastIsland.challenges.length - 1]);
 
+// encontra a próxima fase aberta dentro da ilha
 const getNextChallengeInIsland = (island, completedSet) => {
   const nextChallenge = island.challenges.find((challenge) => !completedSet.has(challenge.id));
   return withIsland(island, nextChallenge || island.challenges[island.challenges.length - 1]);
 };
 
+// encontra a próxima fase da aventura inteira
 const getNextAdventureChallenge = (completed = []) => {
   const completedSet = new Set(completed);
   const nextIsland = quizIslands.find((island) =>
@@ -64,43 +61,6 @@ const getNextAdventureChallenge = (completed = []) => {
 
   return nextIsland ? getNextChallengeInIsland(nextIsland, completedSet) : lastChallenge;
 };
-
-function MapFocus({ position }) {
-  const map = useMap();
-
-  useEffect(() => {
-    if (position) {
-      map.flyTo(position, Math.max(map.getZoom(), 1), { duration: 0.7 });
-    }
-  }, [map, position]);
-
-  return null;
-}
-
-function MapZoomControls() {
-  const map = useMap();
-
-  return (
-    <div className="map-zoom-controls">
-      <button
-        type="button"
-        className="map-glossy-icon-button"
-        onClick={() => map.zoomIn()}
-        aria-label="Aproximar mapa"
-      >
-        <Plus size={30} strokeWidth={4} />
-      </button>
-      <button
-        type="button"
-        className="map-glossy-icon-button"
-        onClick={() => map.zoomOut()}
-        aria-label="Reduzir mapa"
-      >
-        <Minus size={30} strokeWidth={4} />
-      </button>
-    </div>
-  );
-}
 
 export default function MapPage() {
   const navigate = useNavigate();
@@ -137,6 +97,7 @@ export default function MapPage() {
     [completedSet]
   );
 
+  // libera a ilha quando a anterior estiver completa
   const isIslandUnlocked = (islandId) => {
     const islandIndex = quizIslands.findIndex((island) => island.id === islandId);
     if (islandIndex <= 0) return true;
@@ -150,7 +111,13 @@ export default function MapPage() {
   const isSelectedIslandComplete = selectedIsland
     ? selectedIslandCompletedCount === selectedIsland.challenges.length
     : false;
+  const mapPlayButtonLabel = (() => {
+    if (getHearts() <= 0) return 'Aguarde';
+    if (isSelectedIslandComplete) return 'Jogar novamente';
+    return selectedIslandCompletedCount > 0 ? 'Próxima pergunta' : 'Jogar';
+  })();
 
+  // cria o marcador customizado do mapa
   const createLevelIcon = (challenge) => {
     const isDone = completedSet.has(challenge.id);
     const isLocked = !isIslandUnlocked(challenge.island.id);
@@ -166,6 +133,7 @@ export default function MapPage() {
     });
   };
 
+  // troca o card para a ilha escolhida
   const selectIsland = (islandId) => {
     if (!isIslandUnlocked(islandId)) return;
 
@@ -176,6 +144,7 @@ export default function MapPage() {
     setFeedback(null);
   };
 
+  // abre a próxima pergunta disponível
   const openQuestion = () => {
     if (!selectedChallenge) return;
     if (!canPlay()) {
@@ -213,6 +182,7 @@ export default function MapPage() {
 
   return (
     <div className="map-page-container">
+      {/* voltar */}
       <button
         type="button"
         className="map-back-button"
@@ -222,6 +192,7 @@ export default function MapPage() {
         <img src={arrowIcon} alt="" className="map-back-arrow" draggable="false" />
       </button>
 
+      {/* pause */}
       <button
         type="button"
         className="map-pause-button map-glossy-icon-button"
@@ -231,6 +202,7 @@ export default function MapPage() {
         <img src={pauseIcon} alt="" className="map-pause-icon" draggable="false" />
       </button>
 
+      {/* mapa */}
       <MapContainer
         crs={L.CRS.Simple}
         center={mapStartPosition}
@@ -264,201 +236,41 @@ export default function MapPage() {
       </MapContainer>
 
       {selectedChallenge && (
-        <section className={`map-island-card ${isAdventureComplete ? 'map-island-card-victory' : `map-island-card-${selectedIsland.color}`}`}>
-          <div className="map-card-shine" />
-
-          <button
-            type="button"
-            className="map-card-close"
-            onClick={() => setSelectedChallenge(null)}
-            aria-label="Fechar"
-          >
-            <X size={22} strokeWidth={4} />
-          </button>
-
-          {isAdventureComplete ? (
-            <div className="map-victory-content">
-              <div className="map-victory-badge">Passaporte completo</div>
-
-              <div className="map-victory-crown" aria-hidden="true">
-                <img src={trophyIcon} alt="" draggable="false" />
-              </div>
-
-              <div className="map-victory-stamps" aria-hidden="true">
-                {quizIslands.map((island) => (
-                  <span key={island.id} className={`map-victory-stamp map-victory-stamp-${island.color}`}>
-                    <img src={islandIcons[island.id]} alt="" />
-                  </span>
-                ))}
-              </div>
-
-              <div className="map-victory-copy">
-                <h2>Você venceu!</h2>
-              </div>
-
-              <button type="button" className="map-victory-button" onClick={replayAdventure}>
-                <img src={refreshIcon} alt="" className="map-victory-button-icon" draggable="false" />
-                <span>Reiniciar</span>
-              </button>
-            </div>
-          ) : (
-            <>
-              <header className="map-island-header">
-                <div className={`map-island-icon map-island-icon-${selectedIsland.color}`}>
-                  <img src={islandIcon} alt="" aria-hidden="true" className="map-island-icon-image" />
-                </div>
-                <div className="map-island-heading">
-                  <div className={`map-level-badge map-level-badge-${selectedIsland.color}`}>
-                    Nível {selectedIsland.level}
-                  </div>
-                  <h2>{selectedIsland.name}</h2>
-                </div>
-              </header>
-
-              <div className="map-stage-title">
-                <span>Fase {selectedChallenge.number}</span>
-                <h3>{selectedChallenge.title}</h3>
-              </div>
-
-              <p className="map-island-description">{selectedIsland.description}</p>
-
-              <div className="map-progress-panel">
-                <div className="map-progress-copy">
-                  <span>Progresso da ilha</span>
-                  <strong>{selectedIslandCompletedCount}/{selectedIsland.challenges.length}</strong>
-                </div>
-                <div
-                  className="map-progress-line"
-                  style={{
-                    '--progress': `${(selectedIslandCompletedCount / selectedIsland.challenges.length) * 100}%`,
-                  }}
-                >
-                  {selectedIsland.challenges.map((challenge) => {
-                    const isDone = completedSet.has(challenge.id);
-                    const isActive = selectedChallenge.id === challenge.id;
-                    const isLocked = !isIslandUnlocked(selectedIsland.id);
-
-                    return (
-                      <button
-                        key={challenge.id}
-                        type="button"
-                        className={`map-progress-point${isDone ? ' is-done' : ''}${isActive ? ' is-active' : ''}${isLocked ? ' is-locked' : ''}`}
-                        onClick={() => setSelectedChallenge(withIsland(selectedIsland, challenge))}
-                        aria-label={`Fase ${challenge.number}`}
-                      >
-                        {isLocked ? <Lock size={14} strokeWidth={3} /> : isDone ? <Check size={15} strokeWidth={4} /> : challenge.number}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="map-island-nav" aria-label="Navegacao entre ilhas">
-                {quizIslands.map((island, index) => (
-                  <button
-                    key={island.id}
-                    type="button"
-                    className={`map-island-nav-button map-island-nav-button-${island.color}${selectedIsland.id === island.id ? ' is-active' : ''}${!isIslandUnlocked(island.id) ? ' is-locked' : ''}`}
-                    onClick={() => selectIsland(island.id)}
-                    disabled={!isIslandUnlocked(island.id)}
-                    aria-label={!isIslandUnlocked(island.id) ? `${island.name} bloqueada` : island.name}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-              </div>
-
-              {feedback && (
-                <div className={`map-feedback map-feedback-${feedback.type}`}>
-                  <strong>{feedback.title}</strong>
-                  <span>{feedback.message}</span>
-                </div>
-              )}
-
-              <div className="map-card-footer">
-                <button type="button" className="map-play-button" onClick={openQuestion}>
-                  {getHearts() > 0 ? (isSelectedIslandComplete ? 'Jogar novamente' : 'Jogar') : 'Aguarde'}
-                </button>
-              </div>
-            </>
-          )}
-        </section>
+        /* card da ilha */
+        <MapIslandCard
+          islands={quizIslands}
+          islandIcons={islandIcons}
+          islandIcon={islandIcon}
+          selectedIsland={selectedIsland}
+          selectedChallenge={selectedChallenge}
+          selectedIslandCompletedCount={selectedIslandCompletedCount}
+          isAdventureComplete={isAdventureComplete}
+          completedSet={completedSet}
+          feedback={feedback}
+          mapPlayButtonLabel={mapPlayButtonLabel}
+          trophyIcon={trophyIcon}
+          refreshIcon={refreshIcon}
+          onClose={() => setSelectedChallenge(null)}
+          onReplayAdventure={replayAdventure}
+          onOpenQuestion={openQuestion}
+          onSelectIsland={selectIsland}
+          onSelectChallenge={(island, challenge) => setSelectedChallenge(withIsland(island, challenge))}
+          isIslandUnlocked={isIslandUnlocked}
+        />
       )}
 
       {isPaused && (
-        <div className="map-pause-overlay" role="presentation">
-          <section
-            className="map-pause-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="map-pause-title"
-          >
-            <button
-              type="button"
-              className="map-pause-close"
-              onClick={() => setIsPaused(false)}
-              aria-label="Fechar pausa"
-            >
-              <X size={34} strokeWidth={4.2} />
-            </button>
-
-            <h2 id="map-pause-title">PAUSE</h2>
-
-            <div className="map-pause-audio-actions" aria-label="Controles de audio">
-              <button
-                type="button"
-                className={`map-pause-audio-button${soundOn ? '' : ' is-off'}`}
-                data-audio-toggle="true"
-                onClick={toggleSound}
-                aria-label={soundOn ? 'Desativar sons' : 'Ativar sons'}
-                aria-pressed={soundOn}
-              >
-                <SoundToggleIcon />
-                <span>Sons</span>
-              </button>
-
-              <button
-                type="button"
-                className="map-pause-audio-button"
-                data-audio-toggle="true"
-                onClick={showMusicNotice}
-                aria-label="Aviso sobre musica"
-              >
-                <MusicToggleIcon />
-                <span>Musica</span>
-              </button>
-            </div>
-
-            <div className="map-pause-actions">
-              <button
-                type="button"
-                className="map-pause-action map-pause-action-green"
-                onClick={() => setIsPaused(false)}
-              >
-                <Play size={42} strokeWidth={4.2} fill="currentColor" />
-                <span>Continuar</span>
-              </button>
-
-              <button
-                type="button"
-                className="map-pause-action map-pause-action-green"
-                onClick={replayAdventure}
-              >
-                <img src={refreshIcon} alt="" className="map-pause-action-icon" draggable="false" />
-                <span>Jogar novamente</span>
-              </button>
-
-              <button
-                type="button"
-                className="map-pause-action map-pause-action-blue"
-                onClick={() => navigate('/home-page')}
-              >
-                <img src={homeIcon} alt="" className="map-pause-action-icon" draggable="false" />
-                <span>Ir para home</span>
-              </button>
-            </div>
-          </section>
-        </div>
+        /* modal de pause */
+        <MapPauseModal
+          soundOn={soundOn}
+          refreshIcon={refreshIcon}
+          homeIcon={homeIcon}
+          onClose={() => setIsPaused(false)}
+          onToggleSound={toggleSound}
+          onShowMusicNotice={showMusicNotice}
+          onReplayAdventure={replayAdventure}
+          onGoHome={() => navigate('/home-page')}
+        />
       )}
     </div>
   );

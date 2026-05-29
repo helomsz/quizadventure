@@ -1,5 +1,13 @@
+﻿/* ======================================================
+   fontes
+====================================================== */
+
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap');
+
+/* ======================================================
+   estrutura do quiz
+====================================================== */
 
 .quiz-screen {
   --quiz-main: #58b900;
@@ -43,6 +51,10 @@
   background: rgba(28, 18, 10, 0.32);
 }
 
+/* ======================================================
+   temas das ilhas
+====================================================== */
+
 .quiz-screen-tropical {
   --quiz-main: #4fa80a;
   --quiz-dark: #245f03;
@@ -79,6 +91,10 @@
   --quiz-background-image: url('../../assets/backgrounds/fundo-lava.png');
 }
 
+/* ======================================================
+   cenário
+====================================================== */
+
 .quiz-scenery {
   display: none;
 }
@@ -111,6 +127,10 @@
     -30px 84px 0 rgba(83, 43, 13, 0.08);
 }
 
+/* ======================================================
+   modal da pergunta
+====================================================== */
+
 .quiz-modal {
   position: relative;
   z-index: 2;
@@ -131,7 +151,7 @@
 
 .quiz-pause-button {
   position: fixed;
-  top: max(18px, env(safe-area-inset-top));
+  top: max(86px, calc(env(safe-area-inset-top) + 86px));
   left: 18px;
   z-index: 30;
   width: 58px;
@@ -184,6 +204,10 @@
   transform: scale(0.95);
 }
 
+/* ======================================================
+   botão fechar
+====================================================== */
+
 .quiz-close-button {
   position: absolute;
   top: 18px;
@@ -225,6 +249,10 @@
   z-index: 1;
   display: block;
 }
+
+/* ======================================================
+   cabeçalho da pergunta
+====================================================== */
 
 .quiz-header {
   display: flex;
@@ -287,6 +315,10 @@
     0 7px 12px rgba(0,0,0,0.18);
 }
 
+/* ======================================================
+   progresso
+====================================================== */
+
 .quiz-progress {
   height: 16px;
   margin: 24px 2px 18px;
@@ -305,6 +337,10 @@
   background:
     linear-gradient(90deg, var(--quiz-main), var(--quiz-light));
 }
+
+/* ======================================================
+   card da pergunta
+====================================================== */
 
 .quiz-question-card {
   padding: 18px;
@@ -332,6 +368,10 @@
   font-size: clamp(1.18rem, 4.4vw, 1.65rem);
   line-height: 1.15;
 }
+
+/* ======================================================
+   respostas de escolha
+====================================================== */
 
 .quiz-answer-grid {
   margin-top: 18px;
@@ -402,6 +442,10 @@
   color: #fff;
 }
 
+/* ======================================================
+   respostas de ordenar
+====================================================== */
+
 .quiz-order-list {
   margin-top: 0;
   display: grid;
@@ -458,6 +502,10 @@
   font-weight: 800;
 }
 
+/* ======================================================
+   ações da pergunta
+====================================================== */
+
 .quiz-actions {
   margin-top: 16px;
   display: flex;
@@ -502,6 +550,10 @@
   filter: grayscale(0.7);
   opacity: 0.6;
 }
+
+/* ======================================================
+   modal de pause
+====================================================== */
 
 .quiz-pause-overlay {
   position: fixed;
@@ -818,6 +870,10 @@
 .quiz-pause-action:active {
   transform: scale(0.96);
 }
+
+/* ======================================================
+   resultado
+====================================================== */
 
 .quiz-result-overlay {
   position: fixed;
@@ -1283,6 +1339,10 @@
      0 3px 0 #0d6940;
 }
 
+/* ======================================================
+   confete
+====================================================== */
+
 .quiz-confetti {
   position: fixed;
   inset: 0;
@@ -1314,6 +1374,10 @@
   width: 8px;
   height: 22px;
 }
+
+/* ======================================================
+   animações
+====================================================== */
 
 @keyframes quiz-result-bounce {
   0% {
@@ -1396,6 +1460,10 @@
   }
 }
 
+/* ======================================================
+   responsividade
+====================================================== */
+
 @media (max-width: 767px) {
   .quiz-screen {
     padding: 8px;
@@ -1409,7 +1477,7 @@
   }
 
   .quiz-pause-button {
-    top: max(14px, env(safe-area-inset-top));
+    top: max(66px, calc(env(safe-area-inset-top) + 66px));
     left: 12px;
     width: 48px;
     height: 48px;

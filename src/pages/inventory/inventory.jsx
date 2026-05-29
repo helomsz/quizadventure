@@ -5,9 +5,11 @@ import arrowIcon from '../../assets/icons/icone-seta.svg';
 import lockIcon from '../../assets/icons/cadeado.svg';
 import './inventory.css';
 
+// conta fases concluídas da ilha
 const getIslandProgress = (island, completedSet) =>
   island.challenges.filter((challenge) => completedSet.has(challenge.id)).length;
 
+// a ilha abre quando a anterior foi concluída
 const isIslandUnlocked = (islandIndex, completedSet) => {
   if (islandIndex === 0) return true;
 
@@ -26,6 +28,7 @@ export default function InventoryPage() {
 
   return (
     <main className="inventory-screen">
+      {/* voltar */}
       <button
         type="button"
         className="inventory-back-button"
@@ -35,12 +38,15 @@ export default function InventoryPage() {
         <img src={arrowIcon} alt="" className="inventory-back-arrow" draggable="false" />
       </button>
 
+      {/* conteúdo */}
       <section className="inventory-content" aria-label="Inventário de ilhas">
+        {/* cabeçalho */}
         <header className="inventory-header">
           <span>Inventário do explorador</span>
           <h1>Ilhas</h1>
         </header>
 
+        {/* cards das ilhas */}
         <div className="inventory-island-grid">
           {quizIslands.map((island, islandIndex) => {
             const completedCount = getIslandProgress(island, completedSet);
@@ -78,6 +84,7 @@ export default function InventoryPage() {
                     <h2>{island.name}</h2>
                     <p>{island.description}</p>
 
+                    {/* progresso */}
                     <div className="inventory-progress-row">
                       <div className="inventory-progress-track" aria-hidden="true">
                         <span style={{ width: `${progress}%` }} />

@@ -36,6 +36,7 @@ const selectionBackgrounds = {
   },
 };
 
+// encontra a ilha atual pelo progresso salvo
 const getCurrentIslandId = () => {
   const completed = loadJson(COMPLETED_KEY, []);
   const completedSet = new Set(completed);
@@ -51,6 +52,7 @@ export default function CharacterSelection({ onConfirm }) {
   const [currentIslandId, setCurrentIslandId] = useState(() => getCurrentIslandId());
   const navigate = useNavigate();
 
+  // mantém a ilha atual sincronizada com o progresso
   useEffect(() => {
     const syncIsland = () => setCurrentIslandId(getCurrentIslandId());
     window.addEventListener(GAME_STATE_EVENT, syncIsland);
@@ -62,6 +64,7 @@ export default function CharacterSelection({ onConfirm }) {
     };
   }, []);
 
+  // salva o personagem escolhido e avança para a home
   const handleConfirmSelection = () => {
     const selectedCharacter = CHARACTERS[currentIndex];
 
@@ -83,7 +86,7 @@ export default function CharacterSelection({ onConfirm }) {
   return (
     <div className="selection-container">
 
-      {/* BACKGROUND */}
+      {/* background */}
       <img
         src={background.mobile}
         alt=""
@@ -96,13 +99,13 @@ export default function CharacterSelection({ onConfirm }) {
         className="sel-bg sel-bg-desktop"
       />
 
-      {/* OVERLAY */}
+      {/* overlay */}
       <div className="selection-overlay" />
 
-      {/* CONTEÚDO */}
+      {/* conteúdo */}
       <div className="selection-content">
 
-        {/* TÍTULO */}
+        {/* título */}
         <div className="sel-title-box">
           <h1 className="sel-title-text">
             Escolha seu
@@ -110,7 +113,7 @@ export default function CharacterSelection({ onConfirm }) {
           </h1>
         </div>
 
-        {/* CARROSSEL */}
+        {/* carrossel */}
         <CharacterCarousel
           currentIndex={currentIndex}
           setCurrentIndex={setCurrentIndex}

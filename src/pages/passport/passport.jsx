@@ -38,6 +38,7 @@ const mobileStampSlots = {
   volcano: { x: 74.1, y: 53.6 },
 };
 
+// restaura selos já colados no passaporte
 const loadPlacedStamps = () => {
   try {
     const placedStamps = JSON.parse(localStorage.getItem(PASSPORT_PLACED_KEY)) || {};
@@ -64,6 +65,7 @@ export default function PassportPage() {
   ));
   const stampSlots = isMobile ? mobileStampSlots : desktopStampSlots;
 
+  // atualiza posições conforme o tamanho da tela
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
 
@@ -78,6 +80,7 @@ export default function PassportPage() {
     };
   }, []);
 
+  // salva a posição dos selos colados
   const savePlacedStamps = (nextPlacedStamps) => {
     setPlacedStamps(nextPlacedStamps);
     localStorage.setItem(PASSPORT_PLACED_KEY, JSON.stringify(nextPlacedStamps));
@@ -88,6 +91,7 @@ export default function PassportPage() {
     setCompletionStage('complete');
   };
 
+  // inicia o arraste do selo
   const startDrag = (event, island, fromSlot = false) => {
     if (!earnedStamps.has(island.id)) return;
 
@@ -101,6 +105,7 @@ export default function PassportPage() {
     });
   };
 
+  // acompanha o selo durante o arraste
   useEffect(() => {
     if (!draggingStamp) return undefined;
 
@@ -159,11 +164,13 @@ export default function PassportPage() {
   return (
     <main className="passport-screen">
       <div className="passport-art">
+        {/* passaporte */}
         <picture className="passport-background">
           <source srcSet={passportDesktopBg} media="(min-width: 768px)" />
           <img src={passportMobileBg} alt="" />
         </picture>
 
+        {/* slots */}
         <section className="passport-drop-layer" aria-label="Passaporte de selos">
           {quizIslands.map((island) => {
             const slot = stampSlots[island.id];
@@ -195,6 +202,7 @@ export default function PassportPage() {
         </section>
       </div>
 
+      {/* voltar */}
       <button
         type="button"
         className="passport-back-button"
@@ -208,6 +216,7 @@ export default function PassportPage() {
         />
       </button>
 
+      {/* dock de selos */}
       <section className="passport-stamp-dock" aria-label="Selos para colar">
         {visibleDockStamps.map((island) => (
           <button
@@ -229,6 +238,7 @@ export default function PassportPage() {
       </section>
 
       {draggingIsland && (
+        /* selo arrastando */
         <div
           className={`passport-dragging-stamp passport-dragging-stamp-${draggingIsland.id}`}
           style={{ left: draggingStamp.x, top: draggingStamp.y }}
@@ -239,6 +249,7 @@ export default function PassportPage() {
       )}
 
       {completionStage !== 'idle' && (
+        /* passaporte completo */
         <div className="passport-complete-scene" aria-live="polite">
           {completionStage === 'video' ? (
             <video
