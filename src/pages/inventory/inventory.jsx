@@ -20,6 +20,10 @@ export default function InventoryPage() {
   const completed = loadJson(COMPLETED_KEY, []);
   const completedSet = new Set(completed);
 
+  const openMap = () => {
+    navigate('/map');
+  };
+
   return (
     <main className="inventory-screen">
       <button
@@ -31,9 +35,9 @@ export default function InventoryPage() {
         <img src={arrowIcon} alt="" className="inventory-back-arrow" draggable="false" />
       </button>
 
-      <section className="inventory-content" aria-label="Inventario de ilhas">
+      <section className="inventory-content" aria-label="Inventário de ilhas">
         <header className="inventory-header">
-          <span>Inventario do explorador</span>
+          <span>Inventário do explorador</span>
           <h1>Ilhas</h1>
         </header>
 
@@ -46,7 +50,18 @@ export default function InventoryPage() {
             return (
               <article
                 key={island.id}
-                className={`inventory-island-card inventory-island-card-${island.color}${islandUnlocked ? '' : ' is-locked'}`}
+                className={`inventory-island-card inventory-island-card-${island.color}${islandUnlocked ? ' is-clickable' : ' is-locked'}`}
+                role={islandUnlocked ? 'button' : undefined}
+                tabIndex={islandUnlocked ? 0 : undefined}
+                onClick={islandUnlocked ? openMap : undefined}
+                onKeyDown={(event) => {
+                  if (!islandUnlocked) return;
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openMap();
+                  }
+                }}
+                aria-label={islandUnlocked ? `Abrir mapa para ${island.name}` : `${island.name} bloqueada`}
               >
                 {!islandUnlocked && (
                   <img

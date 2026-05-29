@@ -250,16 +250,30 @@
   justify-content: center;
 }
 
+.quiz-island-icon-image {
+  position: relative;
+  z-index: 1;
+  width: 68%;
+  height: 68%;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.22));
+  pointer-events: none;
+}
+
 .quiz-heading {
   display: grid;
   gap: 3px;
   color: #623813;
+  justify-items: start;
+  min-width: 0;
+  text-align: left;
 }
 
 .quiz-heading span {
   color: var(--quiz-dark);
   font-size: 0.86rem;
   font-weight: 800;
+  text-align: left;
   text-transform: uppercase;
 }
 
@@ -267,6 +281,7 @@
   font-family: 'Baloo 2', sans-serif;
   font-size: clamp(2rem, 6vw, 3rem);
   line-height: 0.9;
+  text-align: left;
   text-shadow:
     0 3px 0 rgba(255,255,255,0.72),
     0 7px 12px rgba(0,0,0,0.18);

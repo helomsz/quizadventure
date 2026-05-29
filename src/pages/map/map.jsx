@@ -1,11 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
-  ArrowLeft,
   Check,
   Lock,
   Play,
-  RotateCcw,
-  Trophy,
   X,
   Plus,
   Minus,
@@ -26,6 +23,7 @@ import {
 } from '../../utils/game-state';
 
 import imagemMapaCompleto from '../../assets/backgrounds/fundo-mapa.png';
+import arrowIcon from '../../assets/icons/icone-seta.svg';
 import pauseIcon from '../../assets/icons/pause.svg';
 import homeIcon from '../../assets/icons/home.svg';
 import refreshIcon from '../../assets/icons/refresh.svg';
@@ -33,6 +31,7 @@ import cactoIcon from '../../assets/icons/cacto.png';
 import geloIcon from '../../assets/icons/gelo.png';
 import coqueiroIcon from '../../assets/icons/coqueiro.png';
 import fogoIcon from '../../assets/icons/fogo.png';
+import trophyIcon from '../../assets/icons/troféu.png';
 
 const islandIcons = {
   tropical: coqueiroIcon,
@@ -200,11 +199,11 @@ export default function MapPage() {
     <div className="map-page-container">
       <button
         type="button"
-        className="map-back-button map-glossy-icon-button"
+        className="map-back-button"
         onClick={() => navigate('/home-page')}
         aria-label="Voltar para home"
       >
-        <ArrowLeft size={30} strokeWidth={4} />
+        <img src={arrowIcon} alt="" className="map-back-arrow" draggable="false" />
       </button>
 
       <button
@@ -263,8 +262,10 @@ export default function MapPage() {
 
           {isAdventureComplete ? (
             <div className="map-victory-content">
+              <div className="map-victory-badge">Passaporte completo</div>
+
               <div className="map-victory-crown" aria-hidden="true">
-                <Trophy size={54} strokeWidth={3.2} />
+                <img src={trophyIcon} alt="" draggable="false" />
               </div>
 
               <div className="map-victory-stamps" aria-hidden="true">
@@ -276,15 +277,11 @@ export default function MapPage() {
               </div>
 
               <div className="map-victory-copy">
-                <span>Passaporte completo</span>
                 <h2>Você venceu!</h2>
-                <p>
-                  Você passou por todos os níveis, conquistou cada ilha e finalizou seu passaporte de aventura.
-                </p>
               </div>
 
               <button type="button" className="map-victory-button" onClick={replayAdventure}>
-                <RotateCcw size={28} strokeWidth={4} />
+                <img src={refreshIcon} alt="" className="map-victory-button-icon" draggable="false" />
                 <span>Reiniciar</span>
               </button>
             </div>

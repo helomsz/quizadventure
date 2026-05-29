@@ -15,11 +15,11 @@
 
 .inventory-back-button {
   position: absolute;
-  top: max(34px, env(safe-area-inset-top));
-  left: clamp(30px, 5vw, 62px);
+  top: max(18px, env(safe-area-inset-top));
+  left: 18px;
   z-index: 5;
-  width: 58px;
-  height: 58px;
+  width: 96px;
+  height: 96px;
   padding: 0;
   border: 5px solid #FEF6E5;
   border-radius: 50%;
@@ -29,6 +29,7 @@
     0 10px 18px rgba(0,0,0,0.28),
     inset 0 4px 6px rgba(255,255,255,0.35),
     inset 0 -6px 10px rgba(0,0,0,0.16);
+  color: #fff;
   cursor: pointer;
   display: grid;
   place-items: center;
@@ -71,7 +72,7 @@
 }
 
 .inventory-content {
-  width: min(1040px, 82vw);
+  width: min(1280px, 86vw);
   margin: 0 auto;
   display: grid;
   justify-items: center;
@@ -86,7 +87,7 @@
 .inventory-header span {
   display: block;
   color: #c9ff73;
-  font-size: 0.7rem;
+  font-size: clamp(0.78rem, 1.1vw, 1.5rem);
   font-weight: 800;
   line-height: 1;
   text-shadow:
@@ -98,10 +99,10 @@
 }
 
 .inventory-header h1 {
-  margin: -2px 0 0;
+  margin: 4px 0 0;
   font-family: 'Baloo 2', sans-serif;
   color: #fff8e7;
-  font-size: clamp(3.1rem, 6vw, 4.6rem);
+  font-size: clamp(4rem, 6.4vw, 7rem);
   line-height: 0.78;
   letter-spacing: 0;
   text-shadow:
@@ -117,7 +118,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(22px, 3.2vw, 34px) clamp(34px, 4.8vw, 54px);
+  gap: clamp(28px, 3.4vw, 46px) clamp(44px, 5.2vw, 72px);
 }
 
 .inventory-island-card {
@@ -128,15 +129,42 @@
   --island-progress-c: #2f9700;
   --island-image: url('../../assets/backgrounds/fundo-tropical.png');
   position: relative;
-  min-height: clamp(170px, 16.4vw, 210px);
+  min-height: clamp(210px, 15.6vw, 275px);
   overflow: hidden;
-  border: 7px solid #fff8df;
-  border-radius: 24px;
+  border: 8px solid #fff8df;
+  border-radius: 26px;
   background: #203b1d;
   box-shadow:
     0 7px 0 rgba(91, 48, 16, 0.72),
     0 15px 20px rgba(0, 0, 0, 0.26),
     inset 0 4px 5px rgba(255, 255, 255, 0.34);
+  transition:
+    transform 0.12s ease,
+    filter 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.inventory-island-card.is-clickable {
+  cursor: pointer;
+}
+
+.inventory-island-card.is-clickable:hover,
+.inventory-island-card.is-clickable:focus-visible {
+  filter: brightness(1.06);
+  transform: translateY(-3px) scale(1.015);
+  box-shadow:
+    0 9px 0 rgba(91, 48, 16, 0.72),
+    0 20px 24px rgba(0, 0, 0, 0.3),
+    inset 0 4px 5px rgba(255, 255, 255, 0.34);
+}
+
+.inventory-island-card.is-clickable:active {
+  transform: translateY(2px) scale(0.99);
+}
+
+.inventory-island-card.is-clickable:focus-visible {
+  outline: 4px solid rgba(255, 248, 223, 0.9);
+  outline-offset: 5px;
 }
 
 .inventory-island-card::before {
@@ -220,9 +248,9 @@
 .inventory-island-copy {
   position: absolute;
   z-index: 2;
-  left: clamp(18px, 2vw, 24px);
-  right: clamp(18px, 2vw, 24px);
-  bottom: 15px;
+  left: clamp(22px, 2.2vw, 32px);
+  right: clamp(22px, 2.2vw, 32px);
+  bottom: clamp(18px, 1.8vw, 24px);
   text-align: left;
   justify-self: start;
 }
@@ -231,7 +259,7 @@
   margin: 0 0 2px;
   font-family: 'Baloo 2', sans-serif;
   color: var(--island-title);
-  font-size: clamp(1.35rem, 2.4vw, 2rem);
+  font-size: clamp(1.75rem, 2.45vw, 2.55rem);
   line-height: 0.84;
   text-shadow:
     -1px -1px 0 var(--island-title-shadow),
@@ -243,10 +271,10 @@
 }
 
 .inventory-island-copy p {
-  width: min(86%, 360px);
-  margin: 0 0 8px;
+  width: min(88%, 460px);
+  margin: 0 0 11px;
   color: #fffef4;
-  font-size: clamp(0.62rem, 0.98vw, 0.82rem);
+  font-size: clamp(0.76rem, 0.98vw, 1rem);
   font-weight: 800;
   line-height: 1.16;
   text-align: left;
@@ -259,12 +287,12 @@
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .inventory-progress-track {
   position: relative;
-  height: clamp(13px, 1.45vw, 18px);
+  height: clamp(16px, 1.3vw, 22px);
   padding: 3px;
   border-radius: 999px;
   background: rgba(255, 248, 225, 0.9);
@@ -287,7 +315,7 @@
 
 .inventory-progress-row strong {
   color: #fffef4;
-  font-size: clamp(0.72rem, 1.1vw, 0.9rem);
+  font-size: clamp(0.84rem, 1.05vw, 1.08rem);
   font-weight: 900;
   line-height: 1;
   text-shadow:
@@ -297,13 +325,45 @@
 
 @media (min-width: 768px) and (max-width: 1180px) {
   .inventory-content {
-    width: min(900px, 82vw);
+    width: min(680px, 88vw);
+  }
+
+  .inventory-header {
+    margin-bottom: 26px;
+  }
+
+  .inventory-header span {
+    font-size: 0.78rem;
+  }
+
+  .inventory-header h1 {
+    font-size: clamp(3.8rem, 7vw, 4.8rem);
+  }
+
+  .inventory-island-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 
   .inventory-island-card {
-    min-height: 148px;
-    border-width: 6px;
-    border-radius: 20px;
+    min-height: clamp(180px, 23vw, 220px);
+    border-width: 7px;
+    border-radius: 22px;
+  }
+
+  .inventory-island-copy {
+    left: 20px;
+    right: 20px;
+    bottom: 16px;
+  }
+
+  .inventory-island-copy h2 {
+    font-size: clamp(1.48rem, 2.7vw, 2rem);
+  }
+
+  .inventory-island-copy p {
+    width: min(90%, 360px);
+    font-size: clamp(0.66rem, 1.18vw, 0.82rem);
   }
 }
 
@@ -316,7 +376,7 @@
   }
 
   .inventory-back-button {
-    top: max(18px, env(safe-area-inset-top));
+    top: max(20px, env(safe-area-inset-top));
     left: 18px;
     width: 55px;
     height: 55px;
@@ -334,11 +394,11 @@
   }
 
   .inventory-header span {
-    font-size: 0.56rem;
+    font-size: 0.76rem;
   }
 
   .inventory-header h1 {
-    font-size: clamp(2.8rem, 16vw, 4rem);
+    font-size: clamp(2.8rem, 16vw, 5rem);
   }
 
   .inventory-island-grid {

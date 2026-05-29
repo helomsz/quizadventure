@@ -589,3 +589,20 @@
   line-clamp: 3;
   -webkit-box-orient: vertical;
 }
+
+.character-container.last-step {
+  left: 50%;
+}
+
+@media (max-width: 768px) {
+  .character-container.last-step {
+    left: 50%;
+  }
+
+  .speech-bubble-container.last-step .speech-bubble-text.small-text {
+    width: 56%;
+    max-width: 56%;
+    font-size: clamp(11px, 3vw, 13px);
+    line-height: 1.12;
+  }
+}

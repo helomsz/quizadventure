@@ -89,7 +89,7 @@ export default function Onboarding() {
         </div>
 
         {/* personagem */}
-        <div className="character-container">
+        <div className={`character-container${isLastStep ? ' last-step' : ''}`}>
           <img
             src={steps[currentStep].character}
             alt="Helo"

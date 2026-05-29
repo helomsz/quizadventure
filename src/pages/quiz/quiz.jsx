@@ -2,12 +2,8 @@ import { useMemo, useRef, useState } from 'react';
 import 'drag-drop-touch';
 import {
   Check,
-  Flame,
-  Landmark,
   RefreshCw,
-  Snowflake,
   Trophy,
-  TreePalm,
   X,
 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -28,12 +24,16 @@ import seloTropical from '../../assets/selos/selo-tropical.png';
 import seloDeserto from '../../assets/selos/selo-deserto.png';
 import seloGelo from '../../assets/selos/selo-gelo.png';
 import seloLava from '../../assets/selos/selo-lava.png';
+import cactoIcon from '../../assets/icons/cacto.png';
+import geloIcon from '../../assets/icons/gelo.png';
+import coqueiroIcon from '../../assets/icons/coqueiro.png';
+import fogoIcon from '../../assets/icons/fogo.png';
 
 const islandIcons = {
-  tropical: TreePalm,
-  desert: Landmark,
-  ice: Snowflake,
-  volcano: Flame,
+  tropical: coqueiroIcon,
+  desert: cactoIcon,
+  ice: geloIcon,
+  volcano: fogoIcon,
 };
 
 const stampImages = {
@@ -125,7 +125,7 @@ export default function QuizPage() {
     );
   }
 
-  const ActiveIslandIcon = islandIcons[activeQuestion.island.id];
+  const activeIslandIcon = islandIcons[activeQuestion.island.id] || coqueiroIcon;
 
   const updateCompleted = (challenge) => {
     if (completedSet.has(challenge.id)) return completed;
@@ -276,7 +276,13 @@ export default function QuizPage() {
 
         <header className="quiz-header">
           <div className={`quiz-island-icon quiz-island-icon-${activeQuestion.island.color}`}>
-            <ActiveIslandIcon size={42} strokeWidth={3} />
+            <img
+              src={activeIslandIcon}
+              alt=""
+              className="quiz-island-icon-image"
+              aria-hidden="true"
+              draggable="false"
+            />
           </div>
 
           <div className="quiz-heading">
