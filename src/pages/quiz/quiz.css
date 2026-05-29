@@ -415,6 +415,18 @@
   gap: 10px;
   padding: 12px;
   font-family: 'Fredoka', sans-serif;
+  touch-action: none;
+  user-select: none;
+  transition:
+    transform 0.12s ease,
+    filter 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.quiz-order-item.is-dragging {
+  opacity: 0.68;
+  filter: brightness(1.05);
+  transform: scale(1.02);
 }
 
 .quiz-order-item span {
@@ -917,19 +929,57 @@
   position: relative;
   min-width: 210px;
   min-height: 54px;
-  border: 5px solid currentColor;
+  border: 5px solid #fff3d1;
   border-radius: 999px;
-  background: rgba(255,255,255,0.58);
-  color: #22ad72;
+  background:
+    radial-gradient(circle at top, #55f2f2 0%, #28cdd5 48%, #0b9eaa 100%);
+  color: #fff8e7;
   box-shadow:
-    0 7px 0 rgba(0,0,0,0.08),
-    inset 0 3px 4px rgba(255,255,255,0.72);
+    0 10px 18px rgba(0, 0, 0, 0.26),
+    inset 0 4px 6px rgba(255, 255, 255, 0.35),
+    inset 0 -6px 10px rgba(0, 0, 0, 0.16);
   cursor: pointer;
   font-family: 'Baloo 2', sans-serif;
   font-size: 1.06rem;
   font-weight: 800;
   text-transform: uppercase;
+  text-shadow:
+    -1px -1px 0 #087f97,
+     1px -1px 0 #087f97,
+    -1px  1px 0 #087f97,
+     1px  1px 0 #087f97,
+     0 3px 0 #076e7a;
   overflow: hidden;
+  transition:
+    transform 0.12s ease,
+    filter 0.2s ease;
+}
+
+.quiz-result-action::before {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 18px;
+  right: 18px;
+  height: 34%;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.24),
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0)
+    );
+  pointer-events: none;
+}
+
+.quiz-result-action:hover {
+  filter: brightness(1.04);
+  transform: scale(1.04);
+}
+
+.quiz-result-action:active {
+  transform: scale(0.96);
 }
 
 .quiz-stamp-action {
@@ -1083,7 +1133,26 @@
 }
 
 .quiz-result-popup-wrong .quiz-result-action {
-  color: #c73f43;
+  background:
+    radial-gradient(circle at top, #ff6c65 0%, #d23d3f 58%, #9c2329 100%);
+  color: #fff8e7;
+  text-shadow:
+    -1px -1px 0 #8b2027,
+     1px -1px 0 #8b2027,
+    -1px  1px 0 #8b2027,
+     1px  1px 0 #8b2027,
+     0 3px 0 #771b22;
+}
+
+.quiz-result-popup-right .quiz-result-action {
+  background:
+    radial-gradient(circle at top, #42dc8e 0%, #22bd77 56%, #138b57 100%);
+  text-shadow:
+    -1px -1px 0 #0f7a4a,
+     1px -1px 0 #0f7a4a,
+    -1px  1px 0 #0f7a4a,
+     1px  1px 0 #0f7a4a,
+     0 3px 0 #0d6940;
 }
 
 .quiz-confetti {

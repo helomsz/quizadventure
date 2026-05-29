@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import quizIslands from '../../data/quiz-questions.json';
 import { getStamps, PASSPORT_PLACED_KEY } from '../../utils/game-state';
@@ -10,6 +9,7 @@ import seloLava from '../../assets/selos/selo-lava.png';
 import passportMobileBg from '../../assets/backgrounds/passaporte-aberto-mobile.png';
 import passportDesktopBg from '../../assets/backgrounds/passaporte-aberto-desktop.png';
 import arrowIcon from '../../assets/icons/icone-seta.svg';
+import lockIcon from '../../assets/icons/cadeado.svg';
 import './passport.css';
 
 const stampImages = {
@@ -200,7 +200,7 @@ export default function PassportPage() {
 
         {lockedDockStamps.map((island) => (
           <div key={island.id} className="passport-dock-stamp is-locked" aria-label={`${island.stamp} bloqueado`}>
-            <Lock size={28} strokeWidth={3.2} />
+            <img src={lockIcon} alt="" className="passport-lock-icon" draggable="false" />
           </div>
         ))}
       </section>

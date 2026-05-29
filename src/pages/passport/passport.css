@@ -204,6 +204,14 @@
   filter: grayscale(1) brightness(0.78);
 }
 
+.passport-lock-icon {
+  width: 44%;
+  height: 44%;
+  object-fit: contain;
+  opacity: 0.9;
+  filter: drop-shadow(0 2px 2px rgba(69, 37, 12, 0.22));
+}
+
 .passport-dragging-stamp {
   position: fixed;
   z-index: 10;
@@ -217,6 +225,36 @@
 @media (min-width: 768px) {
   .passport-screen {
     --passport-aspect: 1728 / 1117;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1536px) {
+  .passport-stamp-slot {
+    --slot-size: clamp(360px, 34vmin, 500px);
+  }
+
+  .passport-stamp-slot-desert {
+    --slot-size: clamp(380px, 36vmin, 520px);
+  }
+
+  .passport-stamp-slot-ice {
+    --slot-size: clamp(385px, 38vmin, 540px);
+  }
+
+  .passport-stamp-slot-volcano {
+    --slot-size: clamp(380px, 37vmin, 520px);
+  }
+
+  .passport-dragging-stamp {
+    width: clamp(360px, 34vmin, 500px);
+    height: clamp(360px, 34vmin, 500px);
+  }
+
+  .passport-dragging-stamp-desert,
+  .passport-dragging-stamp-ice,
+  .passport-dragging-stamp-volcano {
+    width: clamp(380px, 37vmin, 530px);
+    height: clamp(380px, 37vmin, 530px);
   }
 }
 

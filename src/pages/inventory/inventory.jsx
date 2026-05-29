@@ -1,7 +1,8 @@
-import { Lock, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import quizIslands from '../../data/quiz-questions.json';
 import { COMPLETED_KEY, loadJson } from '../../utils/game-state';
+import arrowIcon from '../../assets/icons/icone-seta.svg';
+import lockIcon from '../../assets/icons/cadeado.svg';
 import './inventory.css';
 
 const getIslandProgress = (island, completedSet) =>
@@ -20,25 +21,23 @@ export default function InventoryPage() {
   const completedSet = new Set(completed);
 
   return (
-    <div className="inventory-screen">
-      <div className="inventory-backdrop" />
+    <main className="inventory-screen">
+      <button
+        type="button"
+        className="inventory-back-button"
+        onClick={() => navigate('/home-page')}
+        aria-label="Voltar para home"
+      >
+        <img src={arrowIcon} alt="" className="inventory-back-arrow" draggable="false" />
+      </button>
 
-      <main className="inventory-panel">
-        <button
-          type="button"
-          className="inventory-close-button"
-          onClick={() => navigate('/home-page')}
-          aria-label="Fechar inventario"
-        >
-          <X size={24} strokeWidth={4} />
-        </button>
-
+      <section className="inventory-content" aria-label="Inventario de ilhas">
         <header className="inventory-header">
-          <span>Inventário</span>
+          <span>Inventario do explorador</span>
           <h1>Ilhas</h1>
         </header>
 
-        <section className="inventory-island-grid" aria-label="Progresso das ilhas">
+        <div className="inventory-island-grid">
           {quizIslands.map((island, islandIndex) => {
             const completedCount = getIslandProgress(island, completedSet);
             const progress = Math.round((completedCount / island.challenges.length) * 100);
@@ -50,27 +49,33 @@ export default function InventoryPage() {
                 className={`inventory-island-card inventory-island-card-${island.color}${islandUnlocked ? '' : ' is-locked'}`}
               >
                 {!islandUnlocked && (
-                  <div className="inventory-lock-badge" aria-hidden="true">
-                    <Lock size={34} strokeWidth={3.4} />
-                  </div>
+                  <img
+                    src={lockIcon}
+                    alt=""
+                    className="inventory-lock-icon"
+                    aria-hidden="true"
+                    draggable="false"
+                  />
                 )}
 
-                <div className="inventory-island-copy">
-                  <h2>{island.name}</h2>
-                  <p>{island.description}</p>
-                </div>
+                {islandUnlocked && (
+                  <div className="inventory-island-copy">
+                    <h2>{island.name}</h2>
+                    <p>{island.description}</p>
 
-                <div className="inventory-progress-block">
-                  <div className="inventory-progress-track">
-                    <span style={{ width: `${progress}%` }} />
+                    <div className="inventory-progress-row">
+                      <div className="inventory-progress-track" aria-hidden="true">
+                        <span style={{ width: `${progress}%` }} />
+                      </div>
+                      <strong>{completedCount}/{island.challenges.length}</strong>
+                    </div>
                   </div>
-                  <strong>{completedCount}/{island.challenges.length} · {progress}%</strong>
-                </div>
+                )}
               </article>
             );
           })}
-        </section>
-      </main>
-    </div>
+        </div>
+      </section>
+    </main>
   );
 }

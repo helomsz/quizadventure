@@ -2,13 +2,10 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   ArrowLeft,
   Check,
-  Flame,
-  Landmark,
   Lock,
   Play,
-  Snowflake,
-  Sparkles,
-  TreePalm,
+  RotateCcw,
+  Trophy,
   X,
   Plus,
   Minus,
@@ -32,12 +29,16 @@ import imagemMapaCompleto from '../../assets/backgrounds/fundo-mapa.png';
 import pauseIcon from '../../assets/icons/pause.svg';
 import homeIcon from '../../assets/icons/home.svg';
 import refreshIcon from '../../assets/icons/refresh.svg';
+import cactoIcon from '../../assets/icons/cacto.png';
+import geloIcon from '../../assets/icons/gelo.png';
+import coqueiroIcon from '../../assets/icons/coqueiro.png';
+import fogoIcon from '../../assets/icons/fogo.png';
 
 const islandIcons = {
-  tropical: TreePalm,
-  desert: Landmark,
-  ice: Snowflake,
-  volcano: Flame,
+  tropical: coqueiroIcon,
+  desert: cactoIcon,
+  ice: geloIcon,
+  volcano: fogoIcon,
 };
 
 const withIsland = (island, challenge) => ({ ...challenge, island });
@@ -119,8 +120,9 @@ export default function MapPage() {
   );
 
   const selectedIsland = selectedChallenge?.island;
-  const IslandIcon = selectedIsland ? islandIcons[selectedIsland.id] : TreePalm;
+  const islandIcon = selectedIsland ? islandIcons[selectedIsland.id] : coqueiroIcon;
   const completedSet = useMemo(() => new Set(completed), [completed]);
+  const isAdventureComplete = allChallenges.every((challenge) => completedSet.has(challenge.id));
 
   const islandProgress = useMemo(
     () => quizIslands.map((island) => ({
@@ -140,6 +142,9 @@ export default function MapPage() {
   const selectedIslandCompletedCount = selectedIsland
     ? selectedIsland.challenges.filter((challenge) => completedSet.has(challenge.id)).length
     : 0;
+  const isSelectedIslandComplete = selectedIsland
+    ? selectedIslandCompletedCount === selectedIsland.challenges.length
+    : false;
 
   const createLevelIcon = (challenge) => {
     const isDone = completedSet.has(challenge.id);
@@ -171,8 +176,8 @@ export default function MapPage() {
     if (!canPlay()) {
       setFeedback({
         type: 'wrong',
-        title: 'Sem coracoes.',
-        message: 'Aguarde a recuperacao dos coracoes para jogar novamente.',
+        title: 'Sem corações.',
+        message: 'Aguarde a recuperação dos corações para jogar novamente.',
       });
       return;
     }
@@ -244,7 +249,7 @@ export default function MapPage() {
       </MapContainer>
 
       {selectedChallenge && (
-        <section className={`map-island-card map-island-card-${selectedIsland.color}`}>
+        <section className={`map-island-card ${isAdventureComplete ? 'map-island-card-victory' : `map-island-card-${selectedIsland.color}`}`}>
           <div className="map-card-shine" />
 
           <button
@@ -256,84 +261,114 @@ export default function MapPage() {
             <X size={22} strokeWidth={4} />
           </button>
 
-          <header className="map-island-header">
-            <div className={`map-island-icon map-island-icon-${selectedIsland.color}`}>
-              <IslandIcon size={34} strokeWidth={3} />
-              <Sparkles className="map-island-sparkle" size={18} strokeWidth={3} />
-            </div>
-            <div className="map-island-heading">
-              <div className={`map-level-badge map-level-badge-${selectedIsland.color}`}>
-                Nivel {selectedIsland.level}
+          {isAdventureComplete ? (
+            <div className="map-victory-content">
+              <div className="map-victory-crown" aria-hidden="true">
+                <Trophy size={54} strokeWidth={3.2} />
               </div>
-              <h2>{selectedIsland.name}</h2>
-            </div>
-          </header>
 
-          <div className="map-stage-title">
-            <span>Fase {selectedChallenge.number}</span>
-            <h3>{selectedChallenge.title}</h3>
-          </div>
+              <div className="map-victory-stamps" aria-hidden="true">
+                {quizIslands.map((island) => (
+                  <span key={island.id} className={`map-victory-stamp map-victory-stamp-${island.color}`}>
+                    <img src={islandIcons[island.id]} alt="" />
+                  </span>
+                ))}
+              </div>
 
-          <p className="map-island-description">{selectedIsland.description}</p>
+              <div className="map-victory-copy">
+                <span>Passaporte completo</span>
+                <h2>Você venceu!</h2>
+                <p>
+                  Você passou por todos os níveis, conquistou cada ilha e finalizou seu passaporte de aventura.
+                </p>
+              </div>
 
-          <div className="map-progress-panel">
-            <div className="map-progress-copy">
-              <span>Progresso da ilha</span>
-              <strong>{selectedIslandCompletedCount}/{selectedIsland.challenges.length}</strong>
-            </div>
-            <div
-              className="map-progress-line"
-              style={{
-                '--progress': `${(selectedIslandCompletedCount / selectedIsland.challenges.length) * 100}%`,
-              }}
-            >
-              {selectedIsland.challenges.map((challenge) => {
-                const isDone = completedSet.has(challenge.id);
-                const isActive = selectedChallenge.id === challenge.id;
-                const isLocked = !isIslandUnlocked(selectedIsland.id);
-
-                return (
-                  <button
-                    key={challenge.id}
-                    type="button"
-                    className={`map-progress-point${isDone ? ' is-done' : ''}${isActive ? ' is-active' : ''}${isLocked ? ' is-locked' : ''}`}
-                    onClick={() => setSelectedChallenge(withIsland(selectedIsland, challenge))}
-                    aria-label={`Fase ${challenge.number}`}
-                  >
-                    {isLocked ? <Lock size={14} strokeWidth={3} /> : isDone ? <Check size={15} strokeWidth={4} /> : challenge.number}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="map-island-nav" aria-label="Navegacao entre ilhas">
-            {quizIslands.map((island, index) => (
-              <button
-                key={island.id}
-                type="button"
-                className={`map-island-nav-button map-island-nav-button-${island.color}${selectedIsland.id === island.id ? ' is-active' : ''}${!isIslandUnlocked(island.id) ? ' is-locked' : ''}`}
-                onClick={() => selectIsland(island.id)}
-                disabled={!isIslandUnlocked(island.id)}
-                aria-label={!isIslandUnlocked(island.id) ? `${island.name} bloqueada` : island.name}
-              >
-                {index + 1}
+              <button type="button" className="map-victory-button" onClick={replayAdventure}>
+                <RotateCcw size={28} strokeWidth={4} />
+                <span>Reiniciar</span>
               </button>
-            ))}
-          </div>
-
-          {feedback && (
-            <div className={`map-feedback map-feedback-${feedback.type}`}>
-              <strong>{feedback.title}</strong>
-              <span>{feedback.message}</span>
             </div>
-          )}
+          ) : (
+            <>
+              <header className="map-island-header">
+                <div className={`map-island-icon map-island-icon-${selectedIsland.color}`}>
+                  <img src={islandIcon} alt="" aria-hidden="true" className="map-island-icon-image" />
+                </div>
+                <div className="map-island-heading">
+                  <div className={`map-level-badge map-level-badge-${selectedIsland.color}`}>
+                    Nível {selectedIsland.level}
+                  </div>
+                  <h2>{selectedIsland.name}</h2>
+                </div>
+              </header>
 
-          <div className="map-card-footer">
-            <button type="button" className="map-play-button" onClick={openQuestion}>
-              {getHearts() > 0 ? 'Jogar' : 'Aguarde'}
-            </button>
-          </div>
+              <div className="map-stage-title">
+                <span>Fase {selectedChallenge.number}</span>
+                <h3>{selectedChallenge.title}</h3>
+              </div>
+
+              <p className="map-island-description">{selectedIsland.description}</p>
+
+              <div className="map-progress-panel">
+                <div className="map-progress-copy">
+                  <span>Progresso da ilha</span>
+                  <strong>{selectedIslandCompletedCount}/{selectedIsland.challenges.length}</strong>
+                </div>
+                <div
+                  className="map-progress-line"
+                  style={{
+                    '--progress': `${(selectedIslandCompletedCount / selectedIsland.challenges.length) * 100}%`,
+                  }}
+                >
+                  {selectedIsland.challenges.map((challenge) => {
+                    const isDone = completedSet.has(challenge.id);
+                    const isActive = selectedChallenge.id === challenge.id;
+                    const isLocked = !isIslandUnlocked(selectedIsland.id);
+
+                    return (
+                      <button
+                        key={challenge.id}
+                        type="button"
+                        className={`map-progress-point${isDone ? ' is-done' : ''}${isActive ? ' is-active' : ''}${isLocked ? ' is-locked' : ''}`}
+                        onClick={() => setSelectedChallenge(withIsland(selectedIsland, challenge))}
+                        aria-label={`Fase ${challenge.number}`}
+                      >
+                        {isLocked ? <Lock size={14} strokeWidth={3} /> : isDone ? <Check size={15} strokeWidth={4} /> : challenge.number}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="map-island-nav" aria-label="Navegacao entre ilhas">
+                {quizIslands.map((island, index) => (
+                  <button
+                    key={island.id}
+                    type="button"
+                    className={`map-island-nav-button map-island-nav-button-${island.color}${selectedIsland.id === island.id ? ' is-active' : ''}${!isIslandUnlocked(island.id) ? ' is-locked' : ''}`}
+                    onClick={() => selectIsland(island.id)}
+                    disabled={!isIslandUnlocked(island.id)}
+                    aria-label={!isIslandUnlocked(island.id) ? `${island.name} bloqueada` : island.name}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+              </div>
+
+              {feedback && (
+                <div className={`map-feedback map-feedback-${feedback.type}`}>
+                  <strong>{feedback.title}</strong>
+                  <span>{feedback.message}</span>
+                </div>
+              )}
+
+              <div className="map-card-footer">
+                <button type="button" className="map-play-button" onClick={openQuestion}>
+                  {getHearts() > 0 ? (isSelectedIslandComplete ? 'Jogar novamente' : 'Jogar') : 'Aguarde'}
+                </button>
+              </div>
+            </>
+          )}
         </section>
       )}
 

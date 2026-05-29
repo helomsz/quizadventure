@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
+import 'drag-drop-touch';
 import {
   Check,
   Flame,
@@ -45,6 +46,51 @@ const stampImages = {
 const sameOrder = (current, answer) =>
   current.length === answer.length && current.every((item, index) => item === answer[index]);
 
+const reorderItems = (items, fromIndex, toIndex) => {
+  if (fromIndex === toIndex) return items;
+
+  const next = [...items];
+  const [moved] = next.splice(fromIndex, 1);
+  next.splice(toIndex, 0, moved);
+  return next;
+};
+
+const shuffleItems = (items) => {
+  const shuffled = [...items];
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
+  }
+
+  return shuffled;
+};
+
+const createShuffledChoices = (question) => {
+  if (!question?.options) return [];
+
+  const shuffled = shuffleItems(question.options);
+
+  if (shuffled[0] === question.answer && shuffled.length > 1) {
+    const [firstOption] = shuffled.splice(0, 1);
+    shuffled.splice(1 + Math.floor(Math.random() * (shuffled.length - 1 || 1)), 0, firstOption);
+  }
+
+  return shuffled;
+};
+
+const createShuffledOrderItems = (question) => {
+  if (question?.type !== 'order') return [];
+
+  const shuffled = shuffleItems(question.items);
+
+  if (sameOrder(shuffled, question.answer) && shuffled.length > 1) {
+    [shuffled[0], shuffled[1]] = [shuffled[1], shuffled[0]];
+  }
+
+  return shuffled;
+};
+
 const allChallenges = quizIslands.flatMap((island) =>
   island.challenges.map((challenge) => ({ ...challenge, island }))
 );
@@ -57,12 +103,12 @@ export default function QuizPage() {
   const [completed, setCompleted] = useState(() => loadJson(COMPLETED_KEY, []));
   const [stamps, setStamps] = useState(() => getStamps());
   const [selectedOption, setSelectedOption] = useState('');
-  const [orderItems, setOrderItems] = useState(() =>
-    activeQuestion?.type === 'order' ? [...activeQuestion.items].reverse() : []
-  );
+  const [orderItems, setOrderItems] = useState(() => createShuffledOrderItems(activeQuestion));
   const [dragIndex, setDragIndex] = useState(null);
   const [feedback, setFeedback] = useState(null);
+  const touchDragIndexRef = useRef(null);
 
+  const choiceOptions = useMemo(() => createShuffledChoices(activeQuestion), [activeQuestion]);
   const completedSet = useMemo(() => new Set(completed), [completed]);
   const stampsSet = useMemo(() => new Set(stamps), [stamps]);
 
@@ -173,12 +219,45 @@ export default function QuizPage() {
   };
 
   const moveOrderItem = (fromIndex, toIndex) => {
-    setOrderItems((current) => {
-      const next = [...current];
-      const [moved] = next.splice(fromIndex, 1);
-      next.splice(toIndex, 0, moved);
-      return next;
-    });
+    setOrderItems((current) => reorderItems(current, fromIndex, toIndex));
+  };
+
+  const moveTouchedOrderItem = (toIndex) => {
+    const fromIndex = touchDragIndexRef.current;
+
+    if (fromIndex === null || fromIndex === toIndex) return;
+
+    setOrderItems((current) => reorderItems(current, fromIndex, toIndex));
+    touchDragIndexRef.current = toIndex;
+    setDragIndex(toIndex);
+  };
+
+  const handleOrderPointerDown = (event, index) => {
+    if (event.pointerType === 'mouse') return;
+
+    touchDragIndexRef.current = index;
+    setDragIndex(index);
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  };
+
+  const handleOrderPointerMove = (event) => {
+    if (touchDragIndexRef.current === null || event.pointerType === 'mouse') return;
+
+    event.preventDefault();
+
+    const target = document
+      .elementFromPoint(event.clientX, event.clientY)
+      ?.closest('[data-quiz-order-index]');
+    const toIndex = Number(target?.dataset.quizOrderIndex);
+
+    if (Number.isInteger(toIndex)) {
+      moveTouchedOrderItem(toIndex);
+    }
+  };
+
+  const finishOrderPointerDrag = () => {
+    touchDragIndexRef.current = null;
+    setDragIndex(null);
   };
 
   return (
@@ -217,7 +296,7 @@ export default function QuizPage() {
 
         {activeQuestion.type === 'choice' ? (
           <div className="quiz-answer-grid">
-            {activeQuestion.options.map((option, index) => (
+            {choiceOptions.map((option, index) => (
               <button
                 key={option}
                 type="button"
@@ -237,15 +316,28 @@ export default function QuizPage() {
               <button
                 key={item}
                 type="button"
-                className="quiz-order-item"
+                className={`quiz-order-item${dragIndex === index ? ' is-dragging' : ''}`}
+                data-quiz-order-index={index}
                 draggable
-                onDragStart={() => setDragIndex(index)}
+                onPointerDown={(event) => handleOrderPointerDown(event, index)}
+                onPointerMove={handleOrderPointerMove}
+                onPointerUp={finishOrderPointerDrag}
+                onPointerCancel={finishOrderPointerDrag}
+                onDragStart={(event) => {
+                  event.dataTransfer.effectAllowed = 'move';
+                  event.dataTransfer.setData('text/plain', String(index));
+                  setDragIndex(index);
+                }}
                 onDragOver={(event) => event.preventDefault()}
-                onDrop={() => {
-                  if (dragIndex === null) return;
-                  moveOrderItem(dragIndex, index);
+                onDragEnter={(event) => event.preventDefault()}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  const sourceIndex = dragIndex ?? Number(event.dataTransfer.getData('text/plain'));
+                  if (!Number.isInteger(sourceIndex)) return;
+                  moveOrderItem(sourceIndex, index);
                   setDragIndex(null);
                 }}
+                onDragEnd={finishOrderPointerDrag}
               >
                 <span>{index + 1}</span>
                 <strong>{item}</strong>

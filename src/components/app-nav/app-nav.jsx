@@ -10,7 +10,7 @@ import passaporteIcon from '../../assets/icons/passaporte.png';
 import mochilinhaIcon from '../../assets/icons/mochilinha.png';
 
 const navItems = [
-  { path: '/home-page', label: 'Inicio', icon: cabanaIcon },
+  { path: '/home-page', label: 'Início', icon: cabanaIcon },
   { path: '/map', label: 'Mapa', icon: mapinhaIcon },
   { path: '/passport', label: 'Selos', icon: passaporteIcon },
   { path: '/inventory', label: 'Inventário', icon: mochilinhaIcon },
@@ -119,7 +119,7 @@ export default function AppNav({ floating = false }) {
         type="button"
         className="app-nav-arrow app-nav-arrow-right"
         onClick={() => scrollNav(1)}
-        aria-label="Proximo"
+        aria-label="Próximo"
       >
         <ChevronRight size={28} strokeWidth={4} />
       </button>
